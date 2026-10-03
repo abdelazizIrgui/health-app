@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useI18n } from '../../i18n/I18nContext';
 import { colors } from '../../theme';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -22,20 +23,26 @@ function PlaceholderScreen({ title, icon, hint }: { title: string; icon: IconNam
   );
 }
 
-export const CalendarScreen = () => (
-  <PlaceholderScreen
-    title="Calendar"
-    icon="calendar-outline"
-    hint="Your cycle calendar will appear here."
-  />
-);
-export const InsightsScreen = () => (
-  <PlaceholderScreen
-    title="Insights"
-    icon="stats-chart-outline"
-    hint="Trends and patterns will appear here."
-  />
-);
+export const CalendarScreen = () => {
+  const { t } = useI18n();
+  return (
+    <PlaceholderScreen
+      title={t('calendar.title')}
+      icon="calendar-outline"
+      hint={t('calendar.hint')}
+    />
+  );
+};
+export const InsightsScreen = () => {
+  const { t } = useI18n();
+  return (
+    <PlaceholderScreen
+      title={t('insights.title')}
+      icon="stats-chart-outline"
+      hint={t('insights.hint')}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.cream },

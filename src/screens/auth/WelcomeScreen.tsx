@@ -3,6 +3,7 @@ import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useI18n } from '../../i18n/I18nContext';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { cardShadow, colors } from '../../theme';
 
@@ -13,6 +14,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
  * then the whole screen fades out and we move to Register.
  */
 export default function WelcomeScreen({ navigation }: Props) {
+  const { t } = useI18n();
   const helloOpacity = useRef(new Animated.Value(0)).current;
   const helloShift = useRef(new Animated.Value(18)).current;
   const subtitleOpacity = useRef(new Animated.Value(0)).current;
@@ -81,10 +83,10 @@ export default function WelcomeScreen({ navigation }: Props) {
         <Animated.Text
           style={[styles.hello, { opacity: helloOpacity, transform: [{ translateY: helloShift }] }]}
         >
-          Hello
+          {t('welcome.hello')}
         </Animated.Text>
         <Animated.Text style={[styles.subtitle, { opacity: subtitleOpacity }]}>
-          Welcome to your health companion
+          {t('welcome.subtitle')}
         </Animated.Text>
       </Animated.View>
     </View>

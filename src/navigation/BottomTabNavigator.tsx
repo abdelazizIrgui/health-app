@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/main/HomeScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
 import { CalendarScreen, InsightsScreen } from '../screens/main/PlaceholderScreens';
+import { useI18n } from '../i18n/I18nContext';
 import { colors } from '../theme';
 
 export type TabParamList = {
@@ -27,6 +28,7 @@ const TAB_ICONS: Record<keyof TabParamList, { active: IconName; inactive: IconNa
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function BottomTabNavigator() {
+  const { t } = useI18n();
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -53,10 +55,22 @@ export default function BottomTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Calendar" component={CalendarScreen} />
-      <Tab.Screen name="Insights" component={InsightsScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('tabs.home') }} />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{ title: t('tabs.calendar') }}
+      />
+      <Tab.Screen
+        name="Insights"
+        component={InsightsScreen}
+        options={{ title: t('tabs.insights') }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: t('tabs.settings') }}
+      />
     </Tab.Navigator>
   );
 }

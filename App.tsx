@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import RootNavigator from './src/navigation/RootNavigator';
 import { UserProvider } from './src/context/UserContext';
+import { I18nProvider } from './src/i18n/I18nContext';
 import { colors } from './src/theme';
 
 // Map our palette onto React Navigation's theme so no default white/blue leaks through.
@@ -23,12 +24,14 @@ const navTheme = {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <UserProvider>
-        <NavigationContainer theme={navTheme}>
-          <StatusBar style="dark" />
-          <RootNavigator />
-        </NavigationContainer>
-      </UserProvider>
+      <I18nProvider>
+        <UserProvider>
+          <NavigationContainer theme={navTheme}>
+            <StatusBar style="dark" />
+            <RootNavigator />
+          </NavigationContainer>
+        </UserProvider>
+      </I18nProvider>
     </SafeAreaProvider>
   );
 }

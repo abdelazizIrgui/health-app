@@ -1,6 +1,9 @@
 /**
  * Onboarding questionnaire (shown once, right after registration).
- * The screen is fully data-driven: to add, remove or reorder a question, edit this list only.
+ * This file holds only the structure (ids, types, options, branching).
+ * All texts live in src/i18n/locales/*.ts under these keys:
+ *   q.<id>.title        q.<id>.subtitle (optional)        q.<id>.o.<optionValue>
+ * To add a question: add it here AND add its texts in every language file.
  */
 
 export type Answer = string | string[] | number | null;
@@ -13,7 +16,6 @@ export type QuestionType = 'single' | 'multi' | 'number' | 'date';
 
 export interface Option {
   value: string;
-  label: string;
   /** Multi-select only: choosing it clears the other options (e.g. "none of the above"). */
   exclusive?: boolean;
 }
@@ -22,16 +24,14 @@ export interface Question {
   id: string;
   phase: 1 | 2 | 3 | 4;
   type: QuestionType;
-  title: string;
-  subtitle?: string;
-  /** Small privacy note shown above the question. */
-  reassurance?: string;
+  /** Shows the small privacy note above the question. */
+  reassurance?: boolean;
   options?: Option[];
   // number questions
   min?: number;
   max?: number;
   defaultValue?: number;
-  unit?: string;
+  unit?: 'years' | 'days';
   /** Shows an "I don't know" button. */
   allowUnknown?: boolean;
   /** Shows a "Skip" button. Core questions (phases 1-2) can't be skipped. */
@@ -39,13 +39,6 @@ export interface Question {
   /** Question is only asked when this returns true. */
   visibleIf?: (a: Answers) => boolean;
 }
-
-export const PHASE_TITLES: Record<1 | 2 | 3 | 4, string> = {
-  1: 'الأساسيات',
-  2: 'طبيعة دورتك',
-  3: 'حالتك الصحية',
-  4: 'ماذا تريدين من التطبيق',
-};
 
 // If her period hasn't started yet, there is nothing else to ask.
 const started = (a: Answers) => a.hasHadPeriod !== 'no';
@@ -56,23 +49,16 @@ export const QUESTIONS: Question[] = [
     id: 'hasHadPeriod',
     phase: 1,
     type: 'single',
-    title: 'هل نزلت عندك الدورة الشهرية من قبل؟',
-    subtitle: 'أسئلة قليلة تساعدنا على فهم دورتك بدقة.',
-    options: [
-      { value: 'yes', label: 'نعم' },
-      { value: 'no', label: 'لا، لم تبدأ بعد' },
-      { value: 'unsure', label: 'لا أتذكر' },
-    ],
+    options: [{ value: 'yes' }, { value: 'no' }, { value: 'unsure' }],
   },
   {
     id: 'firstPeriodAge',
     phase: 1,
     type: 'number',
-    title: 'كم كان عمرك عند أول دورة؟',
     min: 8,
     max: 18,
     defaultValue: 12,
-    unit: 'سنة',
+    unit: 'years',
     allowUnknown: true,
     skippable: true,
     visibleIf: started,
@@ -81,8 +67,6 @@ export const QUESTIONS: Question[] = [
     id: 'lastPeriodStart',
     phase: 1,
     type: 'date',
-    title: 'متى بدأت آخر دورة؟',
-    subtitle: 'أول يوم نزل فيه الدم.',
     allowUnknown: true,
     visibleIf: started,
   },
@@ -90,11 +74,10 @@ export const QUESTIONS: Question[] = [
     id: 'periodLength',
     phase: 1,
     type: 'number',
-    title: 'كم يوماً يستمر النزيف عادة؟',
     min: 2,
     max: 10,
     defaultValue: 5,
-    unit: 'أيام',
+    unit: 'days',
     allowUnknown: true,
     visibleIf: started,
   },
@@ -102,12 +85,10 @@ export const QUESTIONS: Question[] = [
     id: 'cycleLength',
     phase: 1,
     type: 'number',
-    title: 'كم يوماً بين بداية دورة وبداية التي تليها؟',
-    subtitle: 'عدّي من أول يوم في دورة إلى أول يوم في الدورة التالية. الطبيعي بين 21 و35 يوماً.',
     min: 18,
     max: 60,
     defaultValue: 28,
-    unit: 'يوماً',
+    unit: 'days',
     allowUnknown: true,
     visibleIf: started,
   },
@@ -115,13 +96,7 @@ export const QUESTIONS: Question[] = [
     id: 'regularity',
     phase: 1,
     type: 'single',
-    title: 'هل دورتك منتظمة؟',
-    options: [
-      { value: 'always', label: 'دائماً' },
-      { value: 'mostly', label: 'غالباً' },
-      { value: 'rarely', label: 'نادراً' },
-      { value: UNKNOWN, label: 'لا أعرف' },
-    ],
+    options: [{ value: 'always' }, { value: 'mostly' }, { value: 'rarely' }, { value: UNKNOWN }],
     visibleIf: started,
   },
 
@@ -130,25 +105,14 @@ export const QUESTIONS: Question[] = [
     id: 'flow',
     phase: 2,
     type: 'single',
-    title: 'كيف تصفين غزارة النزيف؟',
-    options: [
-      { value: 'light', label: 'خفيف' },
-      { value: 'medium', label: 'متوسط' },
-      { value: 'heavy', label: 'غزير' },
-      { value: 'varies', label: 'يتغير من دورة لأخرى' },
-    ],
+    options: [{ value: 'light' }, { value: 'medium' }, { value: 'heavy' }, { value: 'varies' }],
     visibleIf: started,
   },
   {
     id: 'heavySigns',
     phase: 2,
     type: 'multi',
-    title: 'هل تلاحظين أياً مما يلي؟',
-    options: [
-      { value: 'hourly', label: 'أغيّر الفوطة كل ساعة أو أقل' },
-      { value: 'clots', label: 'تظهر جلطات كبيرة' },
-      { value: 'none', label: 'لا شيء من ذلك', exclusive: true },
-    ],
+    options: [{ value: 'hourly' }, { value: 'clots' }, { value: 'none', exclusive: true }],
     skippable: true,
     visibleIf: (a) => started(a) && a.flow === 'heavy',
   },
@@ -156,30 +120,22 @@ export const QUESTIONS: Question[] = [
     id: 'pain',
     phase: 2,
     type: 'single',
-    title: 'كيف الألم أثناء الدورة؟',
-    options: [
-      { value: 'none', label: 'لا يوجد' },
-      { value: 'mild', label: 'خفيف' },
-      { value: 'moderate', label: 'متوسط' },
-      { value: 'severe', label: 'شديد ويمنعني من أنشطتي' },
-    ],
+    options: [{ value: 'none' }, { value: 'mild' }, { value: 'moderate' }, { value: 'severe' }],
     visibleIf: started,
   },
   {
     id: 'pmsSymptoms',
     phase: 2,
     type: 'multi',
-    title: 'ما الأعراض التي تلاحظينها قبل الدورة؟',
-    subtitle: 'يمكنك اختيار أكثر من إجابة.',
     options: [
-      { value: 'bloating', label: 'انتفاخ' },
-      { value: 'mood', label: 'تقلب المزاج' },
-      { value: 'headache', label: 'صداع' },
-      { value: 'acne', label: 'حب الشباب' },
-      { value: 'fatigue', label: 'تعب' },
-      { value: 'cravings', label: 'رغبة في الطعام' },
-      { value: 'breast', label: 'ألم في الثدي' },
-      { value: 'none', label: 'لا ألاحظ شيئاً', exclusive: true },
+      { value: 'bloating' },
+      { value: 'mood' },
+      { value: 'headache' },
+      { value: 'acne' },
+      { value: 'fatigue' },
+      { value: 'cravings' },
+      { value: 'breast' },
+      { value: 'none', exclusive: true },
     ],
     visibleIf: started,
   },
@@ -187,12 +143,7 @@ export const QUESTIONS: Question[] = [
     id: 'spotting',
     phase: 2,
     type: 'single',
-    title: 'هل يحدث نزيف أو بقع بين الدورات؟',
-    options: [
-      { value: 'never', label: 'أبداً' },
-      { value: 'sometimes', label: 'أحياناً' },
-      { value: 'often', label: 'كثيراً' },
-    ],
+    options: [{ value: 'never' }, { value: 'sometimes' }, { value: 'often' }],
     skippable: true,
     visibleIf: started,
   },
@@ -202,15 +153,13 @@ export const QUESTIONS: Question[] = [
     id: 'status',
     phase: 3,
     type: 'multi',
-    title: 'ما وضعك الحالي؟',
-    subtitle: 'يمكنك اختيار أكثر من إجابة.',
-    reassurance: 'هذه الإجابات تبقى على جهازك فقط ولا نرسلها لأحد.',
+    reassurance: true,
     options: [
-      { value: 'pregnant', label: 'حامل' },
-      { value: 'postpartum', label: 'بعد الولادة أو أرضع' },
-      { value: 'hormonal', label: 'أستخدم وسيلة هرمونية' },
-      { value: 'perimenopause', label: 'أقترب من سن اليأس' },
-      { value: 'none', label: 'لا شيء مما سبق', exclusive: true },
+      { value: 'pregnant' },
+      { value: 'postpartum' },
+      { value: 'hormonal' },
+      { value: 'perimenopause' },
+      { value: 'none', exclusive: true },
     ],
     skippable: true,
     visibleIf: started,
@@ -219,13 +168,12 @@ export const QUESTIONS: Question[] = [
     id: 'diagnosis',
     phase: 3,
     type: 'multi',
-    title: 'هل لديك تشخيص طبي؟',
     options: [
-      { value: 'pcos', label: 'تكيّس المبايض (PCOS)' },
-      { value: 'endometriosis', label: 'بطانة الرحم المهاجرة' },
-      { value: 'thyroid', label: 'مشاكل الغدة الدرقية' },
-      { value: 'none', label: 'لا شيء', exclusive: true },
-      { value: 'private', label: 'أفضّل ألا أقول', exclusive: true },
+      { value: 'pcos' },
+      { value: 'endometriosis' },
+      { value: 'thyroid' },
+      { value: 'none', exclusive: true },
+      { value: 'private', exclusive: true },
     ],
     skippable: true,
     visibleIf: started,
@@ -234,13 +182,7 @@ export const QUESTIONS: Question[] = [
     id: 'anemia',
     phase: 3,
     type: 'single',
-    title: 'هل عانيتِ من فقر الدم أو نقص الحديد؟',
-    subtitle: 'مهم خصوصاً مع النزيف الغزير.',
-    options: [
-      { value: 'yes', label: 'نعم' },
-      { value: 'no', label: 'لا' },
-      { value: 'unsure', label: 'لا أعرف' },
-    ],
+    options: [{ value: 'yes' }, { value: 'no' }, { value: 'unsure' }],
     skippable: true,
     visibleIf: started,
   },
@@ -248,13 +190,11 @@ export const QUESTIONS: Question[] = [
     id: 'lifestyle',
     phase: 3,
     type: 'multi',
-    title: 'هل حدث مؤخراً أي مما يلي؟',
-    subtitle: 'هذه الأمور قد تؤخر الدورة، فتفسّر التأخر بدل القلق.',
     options: [
-      { value: 'weight', label: 'تغيّر كبير في الوزن' },
-      { value: 'exercise', label: 'رياضة شديدة' },
-      { value: 'stress', label: 'توتر كبير' },
-      { value: 'none', label: 'لا شيء من ذلك', exclusive: true },
+      { value: 'weight' },
+      { value: 'exercise' },
+      { value: 'stress' },
+      { value: 'none', exclusive: true },
     ],
     skippable: true,
     visibleIf: started,
@@ -265,12 +205,7 @@ export const QUESTIONS: Question[] = [
     id: 'goal',
     phase: 4,
     type: 'single',
-    title: 'ما هدفك الأساسي من التطبيق؟',
-    options: [
-      { value: 'track', label: 'معرفة موعد دورتي فقط' },
-      { value: 'symptoms', label: 'فهم أعراضي ومزاجي' },
-      { value: 'conceive', label: 'التخطيط للحمل' },
-    ],
+    options: [{ value: 'track' }, { value: 'symptoms' }, { value: 'conceive' }],
     skippable: true,
     visibleIf: started,
   },
@@ -278,11 +213,7 @@ export const QUESTIONS: Question[] = [
     id: 'ramadan',
     phase: 4,
     type: 'single',
-    title: 'هل تريدين تتبّع أيام رمضان والتقويم الهجري؟',
-    options: [
-      { value: 'yes', label: 'نعم' },
-      { value: 'no', label: 'لا' },
-    ],
+    options: [{ value: 'yes' }, { value: 'no' }],
     skippable: true,
     visibleIf: started,
   },
@@ -290,12 +221,7 @@ export const QUESTIONS: Question[] = [
     id: 'reminders',
     phase: 4,
     type: 'single',
-    title: 'كيف تفضّلين التذكيرات؟',
-    options: [
-      { value: 'neutral', label: 'بنص عام محايد (مثل: "تذكير")' },
-      { value: 'clear', label: 'بنص واضح' },
-      { value: 'off', label: 'بدون تذكيرات' },
-    ],
+    options: [{ value: 'neutral' }, { value: 'clear' }, { value: 'off' }],
     skippable: true,
   },
 ];

@@ -2,9 +2,7 @@ import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  Modal,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,7 +15,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
+import BottomSheet from '../../components/BottomSheet';
+import LanguageSheet from '../../components/LanguageSheet';
 import { useUser } from '../../context/UserContext';
+import { useI18n } from '../../i18n/I18nContext';
 import { colors } from '../../theme';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -28,23 +29,11 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9\s\-()]+$/;
 const DEFAULT_BIRTH = new Date(2000, 0, 1); // where the picker starts
 
-const LANGUAGES = [
-  { code: 'en', native: 'English', english: 'English' },
-  { code: 'ar', native: 'العربية', english: 'Arabic' },
-  { code: 'fr', native: 'Français', english: 'French' },
-  { code: 'es', native: 'Español', english: 'Spanish' },
-  { code: 'de', native: 'Deutsch', english: 'German' },
-  { code: 'pt', native: 'Português', english: 'Portuguese' },
-];
-
 // ---------- Helpers ----------
 
 /** "YYYY-MM-DD" from local date parts (avoids timezone shifts from toISOString). */
 const toIsoDate = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 
 // ---------- Small UI pieces ----------
 
@@ -58,20 +47,24 @@ interface FieldProps extends TextInputProps {
 
 /** Labeled text input with a leading icon and an inline error message. */
 function Field({ label, icon, error, inputRef, rightSlot, ...inputProps }: FieldProps) {
+  const { dir } = useI18n();
+  const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   return (
     <View style={styles.fieldWrap}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputRow, error ? styles.inputRowError : null]}>
+      <Text style={[styles.label, text]}>{label}</Text>
+      <View
+        style={[styles.inputRow, { flexDirection: dir.row }, error ? styles.inputRowError : null]}
+      >
         <Ionicons name={icon} size={20} color={colors.muted} />
         <TextInput
           ref={inputRef}
-          style={styles.input}
+          style={[styles.input, { textAlign: dir.align }]}
           placeholderTextColor={colors.muted}
           {...inputProps}
         />
         {rightSlot}
       </View>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, text]}>{error}</Text> : null}
     </View>
   );
 }
@@ -87,70 +80,49 @@ interface SelectFieldProps {
 
 /** Looks like an input, but opens a picker when tapped. */
 function SelectField({ label, icon, value, placeholder, error, onPress }: SelectFieldProps) {
+  const { dir } = useI18n();
+  const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   return (
     <View style={styles.fieldWrap}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, text]}>{label}</Text>
       <TouchableOpacity
-        style={[styles.inputRow, error ? styles.inputRowError : null]}
+        style={[styles.inputRow, { flexDirection: dir.row }, error ? styles.inputRowError : null]}
         activeOpacity={0.8}
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={`${label}: ${value ?? placeholder}`}
       >
         <Ionicons name={icon} size={20} color={colors.muted} />
-        <Text style={[styles.input, styles.selectText, !value && styles.placeholder]}>
+        <Text style={[styles.input, styles.selectText, text, !value && styles.placeholder]}>
           {value ?? placeholder}
         </Text>
         <Ionicons name="chevron-down" size={18} color={colors.muted} />
       </TouchableOpacity>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, text]}>{error}</Text> : null}
     </View>
-  );
-}
-
-/** Simple bottom sheet used for the language list and the iOS date picker. */
-function BottomSheet({
-  visible,
-  title,
-  onClose,
-  children,
-}: {
-  visible: boolean;
-  title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={styles.sheet}>
-        <View style={styles.sheetHandle} />
-        <Text style={styles.sheetTitle}>{title}</Text>
-        {children}
-      </View>
-    </Modal>
   );
 }
 
 // ---------- Screen ----------
 
+/** Each error is a translation key, so it re-translates if the language changes. */
 type Errors = {
   name?: string;
   email?: string;
   phone?: string;
   birth?: string;
-  language?: string;
   password?: string;
 };
 
 export default function RegisterScreen() {
   const { register } = useUser();
+  const { t, dir, language, languageInfo, setLanguage, formatDate } = useI18n();
+  const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [birth, setBirth] = useState<Date | null>(null);
-  const [languageCode, setLanguageCode] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -163,7 +135,7 @@ export default function RegisterScreen() {
   const phoneRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  const language = LANGUAGES.find((l) => l.code === languageCode);
+  const err = (key?: string) => (key ? t(key) : undefined);
 
   const openDatePicker = () => {
     if (Platform.OS === 'android') {
@@ -186,33 +158,32 @@ export default function RegisterScreen() {
     const next: Errors = {};
     const phoneDigits = phone.replace(/\D/g, '');
 
-    if (name.trim().length < 2) next.name = 'Enter your name';
-    if (!EMAIL_PATTERN.test(email.trim())) next.email = 'Enter a valid email address';
+    if (name.trim().length < 2) next.name = 'register.errName';
+    if (!EMAIL_PATTERN.test(email.trim())) next.email = 'register.errEmail';
     if (!PHONE_PATTERN.test(phone.trim()) || phoneDigits.length < 7 || phoneDigits.length > 15) {
-      next.phone = 'Enter a valid phone number';
+      next.phone = 'register.errPhone';
     }
-    if (!birth) next.birth = 'Select your birth date';
-    if (!languageCode) next.language = 'Select your language';
-    if (password.length < 8) next.password = 'Use at least 8 characters';
+    if (!birth) next.birth = 'register.errBirth';
+    if (password.length < 8) next.password = 'register.errPassword';
 
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
   const handleSubmit = async () => {
-    if (submitting || !validate() || !birth || !languageCode) return;
+    if (submitting || !validate() || !birth) return;
     setSubmitting(true);
     try {
-      // Saves the profile; the root navigator then opens the main app.
+      // Saves the profile; the root navigator then opens the questionnaire.
       await register({
         name: name.trim(),
         email: email.trim().toLowerCase(),
         phone: phone.trim(),
         birthDate: toIsoDate(birth),
-        language: languageCode,
+        language, // the app and the questions continue in this language
       });
     } catch {
-      setErrors({ email: 'Could not save your account. Please try again.' });
+      setErrors({ email: 'register.errSave' });
       setSubmitting(false);
     }
   };
@@ -228,31 +199,44 @@ export default function RegisterScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.iconCircle}>
+          <View
+            style={[
+              styles.iconCircle,
+              { alignSelf: dir.row === 'row' ? 'flex-start' : 'flex-end' },
+            ]}
+          >
             <Ionicons name="heart" size={28} color={colors.rose} />
           </View>
-          <Text style={styles.title}>Create your account</Text>
-          <Text style={styles.subtitle}>Set up your profile to start tracking your health.</Text>
+          <Text style={[styles.title, text]}>{t('register.title')}</Text>
+          <Text style={[styles.subtitle, text]}>{t('register.subtitle')}</Text>
 
+          {/* Language first: the whole form switches to it as soon as she picks one. */}
+          <SelectField
+            label={t('register.language')}
+            icon="language-outline"
+            value={languageInfo.native}
+            placeholder=""
+            onPress={() => setShowLanguages(true)}
+          />
           <Field
-            label="Name"
+            label={t('register.name')}
             icon="person-outline"
-            placeholder="Your name"
+            placeholder={t('register.namePlaceholder')}
             value={name}
             onChangeText={setName}
-            error={errors.name}
+            error={err(errors.name)}
             autoCapitalize="words"
             autoComplete="name"
             returnKeyType="next"
             onSubmitEditing={() => emailRef.current?.focus()}
           />
           <Field
-            label="Email"
+            label={t('register.email')}
             icon="mail-outline"
             placeholder="you@example.com"
             value={email}
             onChangeText={setEmail}
-            error={errors.email}
+            error={err(errors.email)}
             inputRef={emailRef}
             autoCapitalize="none"
             autoComplete="email"
@@ -261,39 +245,31 @@ export default function RegisterScreen() {
             onSubmitEditing={() => phoneRef.current?.focus()}
           />
           <Field
-            label="Phone number"
+            label={t('register.phone')}
             icon="call-outline"
             placeholder="+212 6 00 00 00 00"
             value={phone}
             onChangeText={setPhone}
-            error={errors.phone}
+            error={err(errors.phone)}
             inputRef={phoneRef}
             keyboardType="phone-pad"
             autoComplete="tel"
           />
           <SelectField
-            label="Birth date"
+            label={t('register.birth')}
             icon="calendar-outline"
             value={birth ? formatDate(birth) : undefined}
-            placeholder="Select your birth date"
-            error={errors.birth}
+            placeholder={t('register.birthPlaceholder')}
+            error={err(errors.birth)}
             onPress={openDatePicker}
           />
-          <SelectField
-            label="Language"
-            icon="language-outline"
-            value={language?.native}
-            placeholder="Select your language"
-            error={errors.language}
-            onPress={() => setShowLanguages(true)}
-          />
           <Field
-            label="Password"
+            label={t('register.password')}
             icon="lock-closed-outline"
-            placeholder="At least 8 characters"
+            placeholder={t('register.passwordPlaceholder')}
             value={password}
             onChangeText={setPassword}
-            error={errors.password}
+            error={err(errors.password)}
             inputRef={passwordRef}
             secureTextEntry={!showPassword}
             autoCapitalize="none"
@@ -303,7 +279,9 @@ export default function RegisterScreen() {
               <TouchableOpacity
                 onPress={() => setShowPassword((v) => !v)}
                 accessibilityRole="button"
-                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                accessibilityLabel={
+                  showPassword ? t('register.hidePassword') : t('register.showPassword')
+                }
                 hitSlop={8}
               >
                 <Ionicons
@@ -325,56 +303,45 @@ export default function RegisterScreen() {
             {submitting ? (
               <ActivityIndicator color={colors.text} />
             ) : (
-              <Text style={styles.buttonText}>Create account</Text>
+              <Text style={styles.buttonText}>{t('register.submit')}</Text>
             )}
           </TouchableOpacity>
 
-          <Text style={styles.note}>Your health data stays on this device.</Text>
+          <Text style={styles.note}>{t('register.note')}</Text>
         </ScrollView>
       </KeyboardAvoidingView>
 
       {/* iOS date picker (Android uses its native dialog above) */}
       {Platform.OS === 'ios' && (
-        <BottomSheet visible={showIosDate} title="Birth date" onClose={() => setShowIosDate(false)}>
+        <BottomSheet
+          visible={showIosDate}
+          title={t('register.birth')}
+          onClose={() => setShowIosDate(false)}
+        >
           <DateTimePicker
             value={birth ?? DEFAULT_BIRTH}
             mode="date"
             display="spinner"
+            locale={language}
             maximumDate={new Date()}
             themeVariant="light"
             onChange={(_, date) => date && setBirth(date)}
           />
           <TouchableOpacity style={styles.button} onPress={() => setShowIosDate(false)}>
-            <Text style={styles.buttonText}>Done</Text>
+            <Text style={styles.buttonText}>{t('common.done')}</Text>
           </TouchableOpacity>
         </BottomSheet>
       )}
 
-      {/* Language list */}
-      <BottomSheet visible={showLanguages} title="Language" onClose={() => setShowLanguages(false)}>
-        {LANGUAGES.map((l) => {
-          const selected = l.code === languageCode;
-          return (
-            <TouchableOpacity
-              key={l.code}
-              style={styles.option}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityState={{ selected }}
-              onPress={() => {
-                setLanguageCode(l.code);
-                setShowLanguages(false);
-              }}
-            >
-              <View>
-                <Text style={styles.optionNative}>{l.native}</Text>
-                <Text style={styles.optionEnglish}>{l.english}</Text>
-              </View>
-              {selected && <Ionicons name="checkmark-circle" size={22} color={colors.rose} />}
-            </TouchableOpacity>
-          );
-        })}
-      </BottomSheet>
+      <LanguageSheet
+        visible={showLanguages}
+        selected={language}
+        onSelect={(code) => {
+          setLanguage(code); // switches the whole screen to this language immediately
+          setShowLanguages(false);
+        }}
+        onClose={() => setShowLanguages(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -398,7 +365,6 @@ const styles = StyleSheet.create({
   fieldWrap: { marginBottom: 18 },
   label: { marginBottom: 8, fontSize: 14, fontWeight: '600', color: colors.text },
   inputRow: {
-    flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 14,
@@ -425,34 +391,4 @@ const styles = StyleSheet.create({
   buttonDisabled: { opacity: 0.7 },
   buttonText: { fontSize: 17, fontWeight: '700', color: colors.text },
   note: { marginTop: 16, fontSize: 13, textAlign: 'center', color: colors.muted },
-
-  // Bottom sheet
-  backdrop: { flex: 1, backgroundColor: 'rgba(44, 37, 45, 0.35)' },
-  sheet: {
-    paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 36,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    backgroundColor: colors.cream,
-  },
-  sheetHandle: {
-    alignSelf: 'center',
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    marginBottom: 16,
-    backgroundColor: 'rgba(44, 37, 45, 0.15)',
-  },
-  sheetTitle: { marginBottom: 8, fontSize: 20, fontWeight: '700', color: colors.text },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(44, 37, 45, 0.12)',
-  },
-  optionNative: { fontSize: 17, fontWeight: '600', color: colors.text },
-  optionEnglish: { marginTop: 2, fontSize: 13, color: colors.muted },
 });

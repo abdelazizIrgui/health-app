@@ -4,10 +4,13 @@ export interface CycleSettings {
   periodLength: number; // days, e.g. 5
 }
 
+export type CyclePhase = 'menstrual' | 'follicular' | 'fertile' | 'luteal';
+
+/** Language-free result; the screen turns it into text with the translation files. */
 export interface CycleStatus {
   day: number; // current cycle day (1-based)
-  message: string; // headline shown on the dashboard
-  phase: string; // secondary label
+  phase: CyclePhase;
+  daysUntilPeriod: number | null; // null while she is on her period
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -16,7 +19,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 /**
- * Works out the cycle day and a status message from the last period start.
+ * Works out the cycle day and phase from the last period start.
  * Ovulation is estimated 14 days before the next period; the fertile
  * window is the 5 days before ovulation plus ovulation day and the day after.
  * This is an estimate only, not medical advice.
@@ -35,16 +38,12 @@ export function getCycleStatus(settings: CycleSettings, today = new Date()): Cyc
   const fertileEnd = ovulationDay + 1;
 
   if (day <= periodLength) {
-    return { day, message: `Period day ${day}`, phase: 'Menstrual phase' };
-  }
-  if (day >= fertileStart && day <= fertileEnd) {
-    return { day, message: 'High chance of pregnancy', phase: 'Fertile window' };
+    return { day, phase: 'menstrual', daysUntilPeriod: null };
   }
 
-  const daysLeft = cycleLength - day + 1;
-  return {
-    day,
-    message: `Period expected in ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'}`,
-    phase: day < fertileStart ? 'Follicular phase' : 'Luteal phase',
-  };
+  const daysUntilPeriod = cycleLength - day + 1;
+  if (day >= fertileStart && day <= fertileEnd) {
+    return { day, phase: 'fertile', daysUntilPeriod };
+  }
+  return { day, phase: day < fertileStart ? 'follicular' : 'luteal', daysUntilPeriod };
 }
