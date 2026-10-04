@@ -17,6 +17,7 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 
 import BottomSheet from '../../components/BottomSheet';
 import LanguageSheet from '../../components/LanguageSheet';
+import RestoreLink from '../../components/RestoreLink';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
 import { colors } from '../../theme';
@@ -123,8 +124,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [birth, setBirth] = useState<Date | null>(null);
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -133,7 +133,6 @@ export default function RegisterScreen() {
 
   const emailRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
-  const passwordRef = useRef<TextInput>(null);
 
   const err = (key?: string) => (key ? t(key) : undefined);
 
@@ -164,7 +163,7 @@ export default function RegisterScreen() {
       next.phone = 'register.errPhone';
     }
     if (!birth) next.birth = 'register.errBirth';
-    if (password.length < 8) next.password = 'register.errPassword';
+    
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -263,35 +262,7 @@ export default function RegisterScreen() {
             error={err(errors.birth)}
             onPress={openDatePicker}
           />
-          <Field
-            label={t('register.password')}
-            icon="lock-closed-outline"
-            placeholder={t('register.passwordPlaceholder')}
-            value={password}
-            onChangeText={setPassword}
-            error={err(errors.password)}
-            inputRef={passwordRef}
-            secureTextEntry={!showPassword}
-            autoCapitalize="none"
-            returnKeyType="done"
-            onSubmitEditing={handleSubmit}
-            rightSlot={
-              <TouchableOpacity
-                onPress={() => setShowPassword((v) => !v)}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  showPassword ? t('register.hidePassword') : t('register.showPassword')
-                }
-                hitSlop={8}
-              >
-                <Ionicons
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color={colors.muted}
-                />
-              </TouchableOpacity>
-            }
-          />
+        
 
           <TouchableOpacity
             style={[styles.button, submitting && styles.buttonDisabled]}
@@ -308,6 +279,7 @@ export default function RegisterScreen() {
           </TouchableOpacity>
 
           <Text style={styles.note}>{t('register.note')}</Text>
+          <RestoreLink />
         </ScrollView>
       </KeyboardAvoidingView>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import HealthAlerts from '../../components/HealthAlerts';
 import LogSheet from '../../components/LogSheet';
 import { useCycle } from '../../context/CycleContext';
 import type { LogKind } from '../../data/logOptions';
@@ -187,7 +187,7 @@ export default function HomeScreen() {
             {forecast.irregular && <Text style={[styles.note, text]}>{t('cycle.irregular')}</Text>}
           </View>
         )}
-
+        <HealthAlerts />
         {/* Quick log buttons (horizontal scroll) */}
         <Text style={[styles.sectionTitle, text]}>{t('home.quickLog')}</Text>
         <ScrollView

@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 import LanguageSheet from '../../components/LanguageSheet';
+import RestoreSheet from '../../components/RestoreSheet';
+import { useBackup } from '../../context/useBackup';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
 import { cardShadow, colors } from '../../theme';
 
-/** Profile card, language and sign out. */
+/** Profile card, language, backup, sign out and delete all data. */
 export default function SettingsScreen() {
-  const { user, signOut } = useUser();
+  const { user, signOut, deleteAllData } = useUser();
   const { t, dir, language, languageInfo, setLanguage } = useI18n();
+  const { exportText } = useBackup();
   const [showLanguages, setShowLanguages] = useState(false);
+  const [showRestore, setShowRestore] = useState(false);
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   const initial = user?.name.trim().charAt(0).toUpperCase() || '?';
 
@@ -23,9 +27,33 @@ export default function SettingsScreen() {
     ]);
   };
 
+  const doExport = async () => {
+    const data = exportText();
+    if (!data) return;
+    try {
+      await Share.share({ message: data, title: t('backup.shareTitle') });
+    } catch (e) {
+      console.warn('Could not share the backup', e);
+    }
+  };
+
+  const confirmExport = () => {
+    Alert.alert(t('settings.exportTitle'), t('settings.exportMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('settings.exportConfirm'), onPress: doExport },
+    ]);
+  };
+
+  const confirmDeleteAll = () => {
+    Alert.alert(t('settings.deleteAllTitle'), t('settings.deleteAllMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('settings.deleteAllConfirm'), style: 'destructive', onPress: deleteAllData },
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={[styles.title, text]}>{t('settings.title')}</Text>
 
         <View style={[styles.card, { flexDirection: dir.row }]}>
@@ -51,6 +79,26 @@ export default function SettingsScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          style={[styles.row, { flexDirection: dir.row }]}
+          activeOpacity={0.8}
+          onPress={confirmExport}
+          accessibilityRole="button"
+        >
+          <Ionicons name="share-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('settings.export')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.row, { flexDirection: dir.row }]}
+          activeOpacity={0.8}
+          onPress={() => setShowRestore(true)}
+          accessibilityRole="button"
+        >
+          <Ionicons name="download-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('settings.restore')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={styles.signOut}
           activeOpacity={0.8}
           onPress={confirmSignOut}
@@ -59,7 +107,19 @@ export default function SettingsScreen() {
           <Ionicons name="log-out-outline" size={20} color={colors.rose} />
           <Text style={styles.signOutText}>{t('settings.signOut')}</Text>
         </TouchableOpacity>
-      </View>
+
+        <TouchableOpacity
+          style={styles.deleteAll}
+          activeOpacity={0.8}
+          onPress={confirmDeleteAll}
+          accessibilityRole="button"
+        >
+          <Ionicons name="trash-outline" size={20} color={colors.muted} />
+          <Text style={styles.deleteAllText}>{t('settings.deleteAll')}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <RestoreSheet visible={showRestore} onClose={() => setShowRestore(false)} confirmReplace />
 
       <LanguageSheet
         visible={showLanguages}
@@ -76,7 +136,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.cream },
-  content: { paddingHorizontal: 20, paddingTop: 12 },
+  content: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 32 },
   title: { fontSize: 30, fontWeight: '700', color: colors.text, marginBottom: 20 },
   card: {
     flexDirection: 'row',
@@ -123,4 +183,13 @@ const styles = StyleSheet.create({
     borderColor: colors.rose,
   },
   signOutText: { fontSize: 16, fontWeight: '600', color: colors.rose },
+  deleteAll: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 12,
+    height: 52,
+  },
+  deleteAllText: { fontSize: 15, fontWeight: '600', color: colors.muted },
 });

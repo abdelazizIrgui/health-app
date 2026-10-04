@@ -19,17 +19,28 @@ interface UserContextValue {
   onboardingDone: boolean;
   /** True until everything saved has been read from storage. */
   loading: boolean;
+  /** False after "Sign out": the data stays on the device, she just has to sign in again. */
+  signedIn: boolean;
   register: (profile: UserProfile) => Promise<void>;
   /** Saves progress while the questionnaire is still in progress. */
   saveAnswers: (answers: Answers) => Promise<void>;
   /** Saves the final answers and opens the main app. */
   completeOnboarding: (answers: Answers) => Promise<void>;
+  /** Signs out WITHOUT deleting anything. */
   signOut: () => Promise<void>;
+  /** Signs back in to the profile saved on this device. */
+  signIn: () => Promise<void>;
+  /** Permanently deletes the profile, answers, periods and daily logs from this device. */
+    deleteAllData: () => Promise<void>;
+  /** Puts back a profile and answers read from a backup, and signs her in. */
+  restoreUser: (profile: UserProfile, answers: Answers, onboardingDone: boolean) => Promise<void>;
 }
+
 
 const STORAGE_KEY = '@health_app/user_profile';
 const ANSWERS_KEY = '@health_app/answers';
 const DONE_KEY = '@health_app/onboarding_done';
+const SIGNED_IN_KEY = '@health_app/signed_in';
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
 
@@ -42,19 +53,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [answers, setAnswers] = useState<Answers>({});
   const [onboardingDone, setOnboardingDone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [signedIn, setSignedIn] = useState(true);
 
   // On launch, restore the profile and questionnaire progress saved on this device.
   useEffect(() => {
     (async () => {
       try {
-        const [savedUser, savedAnswers, savedDone] = await Promise.all([
+        const [savedUser, savedAnswers, savedDone, savedSignedIn] = await Promise.all([
           AsyncStorage.getItem(STORAGE_KEY),
           AsyncStorage.getItem(ANSWERS_KEY),
           AsyncStorage.getItem(DONE_KEY),
+          AsyncStorage.getItem(SIGNED_IN_KEY),
         ]);
         if (savedUser) setUser(JSON.parse(savedUser));
         if (savedAnswers) setAnswers(JSON.parse(savedAnswers));
         setOnboardingDone(savedDone === '1');
+        setSignedIn(savedSignedIn !== '0'); // nothing saved yet = signed in (older installs)
       } catch (e) {
         console.warn('Could not read saved data', e);
       } finally {
@@ -64,7 +78,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const register = useCallback(async (profile: UserProfile) => {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    await AsyncStorage.multiSet([
+      [STORAGE_KEY, JSON.stringify(profile)],
+      [SIGNED_IN_KEY, '1'],
+    ]);
+    setSignedIn(true);
     setUser(profile); // RootNavigator reacts to this and opens the questionnaire
   }, []);
 
@@ -86,12 +104,49 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setOnboardingDone(true); // RootNavigator reacts to this and opens the main app
   }, []);
 
+  // Sign out only closes the session. The profile, answers, periods and logs stay on the device.
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove([STORAGE_KEY, ANSWERS_KEY, DONE_KEY]);
+    try {
+      await AsyncStorage.setItem(SIGNED_IN_KEY, '0');
+    } catch (e) {
+      console.warn('Could not save the sign-out', e);
+    }
+    setSignedIn(false); // RootNavigator shows the "Welcome back" screen
+  }, []);
+
+  const signIn = useCallback(async () => {
+    try {
+      await AsyncStorage.setItem(SIGNED_IN_KEY, '1');
+    } catch (e) {
+      console.warn('Could not save the sign-in', e);
+    }
+    setSignedIn(true);
+  }, []);
+
+  // The only place where data is deleted. CycleProvider clears periods and logs when user is null.
+  const deleteAllData = useCallback(async () => {
+    await AsyncStorage.multiRemove([STORAGE_KEY, ANSWERS_KEY, DONE_KEY, SIGNED_IN_KEY]);
     setUser(null);
     setAnswers({});
-    setOnboardingDone(false); // RootNavigator returns to Welcome > Register
+    setOnboardingDone(false);
+    setSignedIn(true); // RootNavigator goes back to Welcome > Register
   }, []);
+
+    const restoreUser = useCallback(
+    async (profile: UserProfile, restoredAnswers: Answers, done: boolean) => {
+      await AsyncStorage.multiSet([
+        [STORAGE_KEY, JSON.stringify(profile)],
+        [ANSWERS_KEY, JSON.stringify(restoredAnswers)],
+        [DONE_KEY, done ? '1' : '0'],
+        [SIGNED_IN_KEY, '1'],
+      ]);
+      setAnswers(restoredAnswers);
+      setOnboardingDone(done);
+      setSignedIn(true);
+      setUser(profile); // RootNavigator reacts and opens the app (or the questionnaire)
+    },
+    []
+  );
 
   const value = useMemo(
     () => ({
@@ -99,12 +154,29 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       answers,
       onboardingDone,
       loading,
+      signedIn,
       register,
       saveAnswers,
       completeOnboarding,
       signOut,
+      signIn,
+      deleteAllData,
+      restoreUser,
     }),
-    [user, answers, onboardingDone, loading, register, saveAnswers, completeOnboarding, signOut]
+    [
+      user,
+      answers,
+      onboardingDone,
+      loading,
+      signedIn,
+      register,
+      saveAnswers,
+      completeOnboarding,
+      signOut,
+      signIn,
+      deleteAllData,
+            restoreUser,
+    ]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

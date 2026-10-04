@@ -19,7 +19,10 @@ interface CycleContextValue {
   /** "My period ended" (today by default). */
   endPeriod: (date?: Date) => Promise<void>;
   /** Cancels what she logged today (a wrong tap). */
-  undoToday: () => Promise<void>;
+    undoToday: () => Promise<void>;
+  /** Replaces the periods and daily logs with the ones read from a backup. */
+  restoreCycle: (periods: PeriodEntry[], logs: Record<string, DayLog>) => Promise<void>;
+
 }
 
 const PERIODS_KEY = '@health_app/periods';
@@ -116,11 +119,22 @@ export function CycleProvider({ children }: { children: React.ReactNode }) {
     [logs]
   );
 
-  const value = useMemo(
-    () => ({ periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday }),
-    [periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday]
+  const restoreCycle = useCallback(
+    async (restoredPeriods: PeriodEntry[], restoredLogs: Record<string, DayLog>) => {
+      setPeriods(restoredPeriods);
+      setLogs(restoredLogs);
+      await AsyncStorage.multiSet([
+        [PERIODS_KEY, JSON.stringify(restoredPeriods)],
+        [LOGS_KEY, JSON.stringify(restoredLogs)],
+      ]);
+    },
+    []
   );
 
+  const value = useMemo(
+    () => ({ periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday, restoreCycle }),
+    [periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday, restoreCycle]
+  );
   return <CycleContext.Provider value={value}>{children}</CycleContext.Provider>;
 }
 
