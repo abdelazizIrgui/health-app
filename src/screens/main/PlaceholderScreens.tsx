@@ -23,16 +23,6 @@ function PlaceholderScreen({ title, icon, hint }: { title: string; icon: IconNam
   );
 }
 
-export const CalendarScreen = () => {
-  const { t } = useI18n();
-  return (
-    <PlaceholderScreen
-      title={t('calendar.title')}
-      icon="calendar-outline"
-      hint={t('calendar.hint')}
-    />
-  );
-};
 export const InsightsScreen = () => {
   const { t } = useI18n();
   return (

@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/main/HomeScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
-import { CalendarScreen, InsightsScreen } from '../screens/main/PlaceholderScreens';
+import CalendarScreen from '../screens/main/CalendarScreen';
+import InsightsScreen from '../screens/main/InsightsScreen';
 import { useI18n } from '../i18n/I18nContext';
 import { colors } from '../theme';
 

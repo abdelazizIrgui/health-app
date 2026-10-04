@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import LogSheet from '../../components/LogSheet';
 import { useCycle } from '../../context/CycleContext';
+import type { LogKind } from '../../data/logOptions';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
 import { cardShadow, colors } from '../../theme';
@@ -12,7 +14,7 @@ import { buildForecast, toIsoDate } from '../../utils/forecast';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
-const QUICK_ACTIONS: { id: string; labelKey: string; icon: IconName }[] = [
+const QUICK_ACTIONS: { id: LogKind; labelKey: string; icon: IconName }[] = [
   { id: 'flow', labelKey: 'home.logFlow', icon: 'water' },
   { id: 'symptoms', labelKey: 'home.logSymptoms', icon: 'heart-pulse' },
   { id: 'mood', labelKey: 'home.logMood', icon: 'emoticon-happy' },
@@ -20,7 +22,8 @@ const QUICK_ACTIONS: { id: string; labelKey: string; icon: IconName }[] = [
 
 export default function HomeScreen() {
   const { user, answers } = useUser();
-  const { periods, startPeriod, endPeriod, undoToday } = useCycle();
+  const { periods, logs, startPeriod, endPeriod, undoToday } = useCycle();
+  const [logKind, setLogKind] = useState<LogKind | null>(null);
   const { t, dir, formatDate } = useI18n();
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
 
@@ -45,6 +48,11 @@ export default function HomeScreen() {
     if (mainIsEnd) endPeriod();
     else startPeriod();
   };
+
+  // A filled circle on a quick-log button means something is already logged today.
+  const todayLog = logs[todayIso];
+  const isLoggedToday = (kind: LogKind) =>
+    kind === 'flow' ? !!todayLog?.flow : kind === 'mood' ? !!todayLog?.mood : !!todayLog?.symptoms?.length;
 
   const ringColor =
     forecast?.phase === 'menstrual'
@@ -195,11 +203,9 @@ export default function HomeScreen() {
               activeOpacity={0.8}
               accessibilityRole="button"
               accessibilityLabel={t(action.labelKey)}
-              onPress={() => {
-                // TODO (next step): open the matching logging sheet.
-              }}
+              onPress={() => setLogKind(action.id)}
             >
-              <View style={styles.actionIcon}>
+              <View style={[styles.actionIcon, isLoggedToday(action.id) && styles.actionIconOn]}>
                 <MaterialCommunityIcons name={action.icon} size={30} color={colors.rose} />
               </View>
               <Text style={styles.actionLabel}>{t(action.labelKey)}</Text>
@@ -209,6 +215,8 @@ export default function HomeScreen() {
 
         <Text style={[styles.disclaimer, text]}>{t('cycle.disclaimer')}</Text>
       </ScrollView>
+
+      <LogSheet kind={logKind} onClose={() => setLogKind(null)} />
     </SafeAreaView>
   );
 }
@@ -346,6 +354,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: colors.peachSoft,
   },
+  actionIconOn: { backgroundColor: colors.peach },
   actionLabel: { fontSize: 14, fontWeight: '600', color: colors.text },
 
   disclaimer: { marginTop: 24, fontSize: 12, lineHeight: 18, color: colors.muted },

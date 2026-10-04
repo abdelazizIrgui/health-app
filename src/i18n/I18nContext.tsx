@@ -9,14 +9,15 @@ import { es } from './locales/es';
 import { de } from './locales/de';
 import { pt } from './locales/pt';
 import { cycleTexts } from './locales/cycleTexts';
+import { extraTexts } from './locales/extraTexts';
 
 const DICTIONARIES: Record<LanguageCode, Dictionary> = {
-  en: { ...en, ...cycleTexts.en },
-  ar: { ...ar, ...cycleTexts.ar },
-  fr: { ...fr, ...cycleTexts.fr },
-  es: { ...es, ...cycleTexts.es },
-  de: { ...de, ...cycleTexts.de },
-  pt: { ...pt, ...cycleTexts.pt },
+  en: { ...en, ...cycleTexts.en, ...extraTexts.en },
+  ar: { ...ar, ...cycleTexts.ar, ...extraTexts.ar },
+  fr: { ...fr, ...cycleTexts.fr, ...extraTexts.fr },
+  es: { ...es, ...cycleTexts.es, ...extraTexts.es },
+  de: { ...de, ...cycleTexts.de, ...extraTexts.de },
+  pt: { ...pt, ...cycleTexts.pt, ...extraTexts.pt },
 };
 const STORAGE_KEY = '@health_app/language';
 
@@ -103,7 +104,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       const candidates =
         n === undefined ? [key] : [`${key}.${pluralCategory(language, n)}`, `${key}.other`, key];
       for (const c of candidates) {
-        const found = dict[c] ?? (en as Record<string, string>)[c];
+        const found = dict[c] ?? (DICTIONARIES.en as Record<string, string>)[c];
         if (found !== undefined) return found;
       }
       return undefined;

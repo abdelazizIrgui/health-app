@@ -1,12 +1,17 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import type { DayLog } from '../data/logOptions';
 import { PeriodEntry, toIsoDate } from '../utils/forecast';
 import { useUser } from './UserContext';
 
 interface CycleContextValue {
   /** Logged periods, oldest first. */
   periods: PeriodEntry[];
+  /** Daily logs (flow, symptoms, mood), keyed by "YYYY-MM-DD". */
+  logs: Record<string, DayLog>;
+  /** Merges a change into one day's log (today by default). */
+  saveLog: (patch: Partial<DayLog>, date?: Date) => Promise<void>;
   /** True until the saved periods have been read from storage. */
   loading: boolean;
   /** "My period started" (today by default). */
@@ -18,6 +23,7 @@ interface CycleContextValue {
 }
 
 const PERIODS_KEY = '@health_app/periods';
+const LOGS_KEY = '@health_app/day_logs';
 
 const CycleContext = createContext<CycleContextValue | undefined>(undefined);
 
@@ -25,13 +31,18 @@ const CycleContext = createContext<CycleContextValue | undefined>(undefined);
 export function CycleProvider({ children }: { children: React.ReactNode }) {
   const { user, loading: userLoading } = useUser();
   const [periods, setPeriods] = useState<PeriodEntry[]>([]);
+  const [logs, setLogs] = useState<Record<string, DayLog>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const saved = await AsyncStorage.getItem(PERIODS_KEY);
+        const [saved, savedLogs] = await Promise.all([
+          AsyncStorage.getItem(PERIODS_KEY),
+          AsyncStorage.getItem(LOGS_KEY),
+        ]);
         if (saved) setPeriods(JSON.parse(saved));
+        if (savedLogs) setLogs(JSON.parse(savedLogs));
       } catch (e) {
         console.warn('Could not read saved periods', e);
       } finally {
@@ -44,7 +55,8 @@ export function CycleProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!userLoading && !user) {
       setPeriods([]);
-      AsyncStorage.removeItem(PERIODS_KEY).catch(() => {});
+      setLogs({});
+      AsyncStorage.multiRemove([PERIODS_KEY, LOGS_KEY]).catch(() => {});
     }
   }, [user, userLoading]);
 
@@ -85,9 +97,28 @@ export function CycleProvider({ children }: { children: React.ReactNode }) {
     else if (last.start === iso) await save(periods.slice(0, -1));
   }, [periods, save]);
 
+  const saveLog = useCallback(
+    async (patch: Partial<DayLog>, date: Date = new Date()) => {
+      const iso = toIsoDate(date);
+      const merged: DayLog = { ...logs[iso], ...patch };
+      // An empty day is removed instead of being stored as {}.
+      const isEmpty = !merged.flow && !merged.mood && !(merged.symptoms && merged.symptoms.length);
+      const next = { ...logs };
+      if (isEmpty) delete next[iso];
+      else next[iso] = merged;
+      setLogs(next);
+      try {
+        await AsyncStorage.setItem(LOGS_KEY, JSON.stringify(next));
+      } catch (e) {
+        console.warn('Could not save the daily log', e);
+      }
+    },
+    [logs]
+  );
+
   const value = useMemo(
-    () => ({ periods, loading, startPeriod, endPeriod, undoToday }),
-    [periods, loading, startPeriod, endPeriod, undoToday]
+    () => ({ periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday }),
+    [periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday]
   );
 
   return <CycleContext.Provider value={value}>{children}</CycleContext.Provider>;
