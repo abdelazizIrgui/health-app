@@ -2,22 +2,26 @@ import { Platform, ViewStyle } from 'react-native';
 
 /** App-wide color palette. Import from here instead of hard-coding hex values. */
 export const colors = {
-  peach: '#FFB6A3', // primary accent
-  rose: '#E07A5F', // strong accent (active states, icons)
-  peachSoft: 'rgba(255, 182, 163, 0.25)', // tinted backgrounds
-  cream: '#FDFBF7', // screen background
+  peach: '#FF9EBB', // primary accent (soft pink)
+  rose: '#D6336C', // strong accent (active states, icons) - raspberry
+  peachSoft: 'rgba(255, 158, 187, 0.22)', // tinted backgrounds
+  cream: '#FFF7FA', // screen background
   white: '#FFFFFF', // cards & surfaces
-  text: '#2C252D', // primary text (deep plum/charcoal)
-  muted: '#8C828A', // secondary text
+  text: '#2B1E2E', // primary text (deep plum)
+  muted: '#7C6B80', // secondary text
+
+  // New (not used yet, ready for the calendar: fertile window / ovulation)
+  lilac: '#B8A1F0',
+  lilacSoft: 'rgba(184, 161, 240, 0.22)',
 };
 
 /** Soft drop shadow for cards; iOS uses shadow*, Android uses elevation. */
 export const cardShadow: ViewStyle = Platform.select({
   ios: {
-    shadowColor: '#2C252D',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    shadowColor: '#7A2E54',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
   },
-  default: { elevation: 4, shadowColor: '#2C252D' },
+  default: { elevation: 4, shadowColor: '#7A2E54' },
 }) as ViewStyle;

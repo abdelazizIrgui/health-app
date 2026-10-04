@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import RootNavigator from './src/navigation/RootNavigator';
 import { UserProvider } from './src/context/UserContext';
+import { CycleProvider } from './src/context/CycleContext';
 import { I18nProvider } from './src/i18n/I18nContext';
 import { colors } from './src/theme';
 
@@ -26,10 +27,12 @@ export default function App() {
     <SafeAreaProvider>
       <I18nProvider>
         <UserProvider>
-          <NavigationContainer theme={navTheme}>
-            <StatusBar style="dark" />
-            <RootNavigator />
-          </NavigationContainer>
+          <CycleProvider>
+            <NavigationContainer theme={navTheme}>
+              <StatusBar style="dark" />
+              <RootNavigator />
+            </NavigationContainer>
+          </CycleProvider>
         </UserProvider>
       </I18nProvider>
     </SafeAreaProvider>

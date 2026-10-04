@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
     width: 240,
     height: 240,
     borderRadius: 120,
-    backgroundColor: 'rgba(255, 182, 163, 0.18)',
+    backgroundColor: 'rgba(255, 158, 187, 0.18)',
   },
   innerRing: {
     position: 'absolute',
     width: 170,
     height: 170,
     borderRadius: 85,
-    backgroundColor: 'rgba(255, 182, 163, 0.35)',
+    backgroundColor: 'rgba(255, 158, 187, 0.35)',
   },
   iconCircle: {
     width: 96,

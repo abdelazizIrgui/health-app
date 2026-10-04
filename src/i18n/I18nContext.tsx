@@ -8,8 +8,16 @@ import { fr } from './locales/fr';
 import { es } from './locales/es';
 import { de } from './locales/de';
 import { pt } from './locales/pt';
+import { cycleTexts } from './locales/cycleTexts';
 
-const DICTIONARIES: Record<LanguageCode, Dictionary> = { en, ar, fr, es, de, pt };
+const DICTIONARIES: Record<LanguageCode, Dictionary> = {
+  en: { ...en, ...cycleTexts.en },
+  ar: { ...ar, ...cycleTexts.ar },
+  fr: { ...fr, ...cycleTexts.fr },
+  es: { ...es, ...cycleTexts.es },
+  de: { ...de, ...cycleTexts.de },
+  pt: { ...pt, ...cycleTexts.pt },
+};
 const STORAGE_KEY = '@health_app/language';
 
 type Params = Record<string, string | number>;

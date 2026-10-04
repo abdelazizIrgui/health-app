@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useI18n } from '../i18n/I18nContext';
 import { colors } from '../theme';
@@ -14,10 +15,11 @@ interface Props {
 /** Simple bottom sheet used for the language list and the iOS date picker. */
 export default function BottomSheet({ visible, title, onClose, children }: Props) {
   const { dir } = useI18n();
+  const insets = useSafeAreaInsets();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={styles.sheet}>
+      <View style={[styles.sheet, { paddingBottom: Math.max(36, insets.bottom + 16) }]}>
         <View style={styles.handle} />
         <Text style={[styles.title, { textAlign: dir.align, writingDirection: dir.writing }]}>
           {title}
