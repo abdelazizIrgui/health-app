@@ -4,6 +4,7 @@ import { alertsTexts } from './alertsTexts';
 import { backupTexts } from './backupTexts';
 import { calendarTexts } from './calendarTexts';
 import { insightsTexts } from './insightsTexts';
+import { lockTexts } from './lockTexts';
 import { logTexts } from './logTexts';
 
 /**
@@ -18,6 +19,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.en,
     ...alertsTexts.en,
     ...backupTexts.en,
+    ...lockTexts.en,
   },
   ar: {
     ...logTexts.ar,
@@ -26,6 +28,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.ar,
     ...alertsTexts.ar,
     ...backupTexts.ar,
+    ...lockTexts.ar,
   },
   fr: {
     ...logTexts.fr,
@@ -34,6 +37,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.fr,
     ...alertsTexts.fr,
     ...backupTexts.fr,
+    ...lockTexts.fr,
   },
   es: {
     ...logTexts.es,
@@ -42,6 +46,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.es,
     ...alertsTexts.es,
     ...backupTexts.es,
+    ...lockTexts.es,
   },
   de: {
     ...logTexts.de,
@@ -50,6 +55,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.de,
     ...alertsTexts.de,
     ...backupTexts.de,
+    ...lockTexts.de,
   },
   pt: {
     ...logTexts.pt,
@@ -58,5 +64,6 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...accountTexts.pt,
     ...alertsTexts.pt,
     ...backupTexts.pt,
+    ...lockTexts.pt,
   },
 };

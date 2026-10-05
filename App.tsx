@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 import RootNavigator from './src/navigation/RootNavigator';
 import { UserProvider } from './src/context/UserContext';
 import { CycleProvider } from './src/context/CycleContext';
+import { LockProvider } from './src/context/LockContext';
+import LockScreen from './src/components/LockScreen';
 import { I18nProvider } from './src/i18n/I18nContext';
 import { colors } from './src/theme';
 
@@ -28,10 +31,16 @@ export default function App() {
       <I18nProvider>
         <UserProvider>
           <CycleProvider>
-            <NavigationContainer theme={navTheme}>
-              <StatusBar style="dark" />
-              <RootNavigator />
-            </NavigationContainer>
+            <LockProvider>
+              <View style={{ flex: 1 }}>
+                <NavigationContainer theme={navTheme}>
+                  <StatusBar style="dark" />
+                  <RootNavigator />
+                </NavigationContainer>
+                {/* Covers everything while the app is locked */}
+                <LockScreen />
+              </View>
+            </LockProvider>
           </CycleProvider>
         </UserProvider>
       </I18nProvider>

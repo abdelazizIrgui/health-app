@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 import LanguageSheet from '../../components/LanguageSheet';
+import PinSheet, { PinMode } from '../../components/PinSheet';
 import RestoreSheet from '../../components/RestoreSheet';
+import { useLock } from '../../context/LockContext';
 import { useBackup } from '../../context/useBackup';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
 import { cardShadow, colors } from '../../theme';
 
-/** Profile card, language, backup, sign out and delete all data. */
+/** Profile card, language, backup, app lock, sign out and delete all data. */
 export default function SettingsScreen() {
   const { user, signOut, deleteAllData } = useUser();
   const { t, dir, language, languageInfo, setLanguage } = useI18n();
   const { exportText } = useBackup();
   const [showLanguages, setShowLanguages] = useState(false);
   const [showRestore, setShowRestore] = useState(false);
+  const { enabled, biometricsAvailable, biometricsOn, setBiometrics } = useLock();
+  const [pinMode, setPinMode] = useState<PinMode | null>(null);
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   const initial = user?.name.trim().charAt(0).toUpperCase() || '?';
 
@@ -98,6 +111,48 @@ export default function SettingsScreen() {
           <Text style={[styles.rowLabel, text]}>{t('settings.restore')}</Text>
         </TouchableOpacity>
 
+        {/* App lock */}
+        <View style={[styles.row, { flexDirection: dir.row }]}>
+          <Ionicons name="lock-closed-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('lock.pinRow')}</Text>
+          <Switch
+            value={enabled}
+            onValueChange={(on) => setPinMode(on ? 'create' : 'disable')}
+            trackColor={{ false: colors.peach, true: colors.rose }}
+            thumbColor={colors.white}
+            accessibilityLabel={t('lock.pinRow')}
+          />
+        </View>
+        {!enabled && <Text style={[styles.hint, text]}>{t('lock.pinHint')}</Text>}
+
+        {enabled && (
+          <TouchableOpacity
+            style={[styles.row, { flexDirection: dir.row }]}
+            activeOpacity={0.8}
+            onPress={() => setPinMode('change')}
+            accessibilityRole="button"
+          >
+            <Ionicons name="key-outline" size={22} color={colors.rose} />
+            <Text style={[styles.rowLabel, text]}>{t('lock.change')}</Text>
+          </TouchableOpacity>
+        )}
+
+        {enabled && biometricsAvailable && (
+          <View style={[styles.row, { flexDirection: dir.row }]}>
+            <Ionicons name="finger-print-outline" size={22} color={colors.rose} />
+            <Text style={[styles.rowLabel, text]}>{t('lock.biometricRow')}</Text>
+            <Switch
+              value={biometricsOn}
+              onValueChange={(on) => {
+                setBiometrics(on);
+              }}
+              trackColor={{ false: colors.peach, true: colors.rose }}
+              thumbColor={colors.white}
+              accessibilityLabel={t('lock.biometricRow')}
+            />
+          </View>
+        )}
+
         <TouchableOpacity
           style={styles.signOut}
           activeOpacity={0.8}
@@ -118,6 +173,12 @@ export default function SettingsScreen() {
           <Text style={styles.deleteAllText}>{t('settings.deleteAll')}</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <PinSheet
+        visible={pinMode !== null}
+        mode={pinMode ?? 'create'}
+        onClose={() => setPinMode(null)}
+      />
 
       <RestoreSheet visible={showRestore} onClose={() => setShowRestore(false)} confirmReplace />
 
@@ -171,6 +232,7 @@ const styles = StyleSheet.create({
   },
   rowLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: colors.text },
   rowValue: { fontSize: 15, color: colors.muted },
+  hint: { marginTop: 8, marginHorizontal: 8, fontSize: 13, lineHeight: 20, color: colors.muted },
   signOut: {
     flexDirection: 'row',
     alignItems: 'center',

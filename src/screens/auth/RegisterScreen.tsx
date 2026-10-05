@@ -112,7 +112,7 @@ type Errors = {
   email?: string;
   phone?: string;
   birth?: string;
-  password?: string;
+  
 };
 
 export default function RegisterScreen() {
