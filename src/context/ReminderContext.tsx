@@ -122,7 +122,7 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
 
         if (settings.daily) {
           await Notifications.scheduleNotificationAsync({
-            content: { title, body: t('reminders.notif.daily') },
+            content: { title, body: t('reminders.notif.daily'), data: { kind: 'daily' } },
             trigger: {
               type: Notifications.SchedulableTriggerInputTypes.DAILY,
               hour: settings.hour,
@@ -137,7 +137,7 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
           for (const date of dates) {
             if (stale()) return;
             await Notifications.scheduleNotificationAsync({
-              content: { title, body: t('reminders.notif.period') },
+              content: { title, body: t('reminders.notif.period'), data: { kind: 'period' } },
               trigger: {
                 type: Notifications.SchedulableTriggerInputTypes.DATE,
                 date,

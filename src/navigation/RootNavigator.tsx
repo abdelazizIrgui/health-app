@@ -7,6 +7,7 @@ import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
+import ChatScreen from '../screens/main/ChatScreen';
 import { useUser } from '../context/UserContext';
 import { colors } from '../theme';
 
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   SignIn: undefined;
   Onboarding: undefined;
   Main: undefined;
+  Chat: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,7 +39,14 @@ export default function RootNavigator() {
         // Signed out but her data is still on the device: ask her to continue.
         <Stack.Screen name="SignIn" component={SignInScreen} />
       ) : user && onboardingDone ? (
-        <Stack.Screen name="Main" component={BottomTabNavigator} />
+        <>
+          <Stack.Screen name="Main" component={BottomTabNavigator} />
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+        </>
       ) : user ? (
         <Stack.Screen
           name="Onboarding"

@@ -9,6 +9,7 @@ import { UserProvider } from './src/context/UserContext';
 import { CycleProvider } from './src/context/CycleContext';
 import { LockProvider } from './src/context/LockContext';
 import { ReminderProvider } from './src/context/ReminderContext';
+import { InboxProvider } from './src/context/InboxContext';
 import LockScreen from './src/components/LockScreen';
 import { I18nProvider } from './src/i18n/I18nContext';
 import { colors } from './src/theme';
@@ -33,16 +34,18 @@ export default function App() {
         <UserProvider>
           <CycleProvider>
             <ReminderProvider>
-              <LockProvider>
-                <View style={{ flex: 1 }}>
-                  <NavigationContainer theme={navTheme}>
-                    <StatusBar style="dark" />
-                    <RootNavigator />
-                  </NavigationContainer>
-                  {/* Covers everything while the app is locked */}
-                  <LockScreen />
-                </View>
-              </LockProvider>
+              <InboxProvider>
+                <LockProvider>
+                  <View style={{ flex: 1 }}>
+                    <NavigationContainer theme={navTheme}>
+                      <StatusBar style="dark" />
+                      <RootNavigator />
+                    </NavigationContainer>
+                    {/* Covers everything while the app is locked */}
+                    <LockScreen />
+                  </View>
+                </LockProvider>
+              </InboxProvider>
             </ReminderProvider>
           </CycleProvider>
         </UserProvider>

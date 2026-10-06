@@ -3,12 +3,13 @@ import { accountTexts } from './accountTexts';
 import { alertsTexts } from './alertsTexts';
 import { backupTexts } from './backupTexts';
 import { calendarTexts } from './calendarTexts';
+import { chatTexts } from './chatTexts';
 import { insightsTexts } from './insightsTexts';
 import { lockTexts } from './lockTexts';
 import { logTexts } from './logTexts';
 import { remindersTexts } from './remindersTexts';
 import { reportTexts } from './reportTexts';
-
+import { inboxTexts } from './inboxTexts';
 /**
  * All the extra translation files in one place.
  * When you add a new texts file, add one line per language here.
@@ -24,6 +25,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.en,
     ...remindersTexts.en,
     ...reportTexts.en,
+    ...inboxTexts.en,
+    ...chatTexts.en,
   },
   ar: {
     ...logTexts.ar,
@@ -35,6 +38,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.ar,
     ...remindersTexts.ar,
     ...reportTexts.ar,
+    ...inboxTexts.ar,
+    ...chatTexts.ar,
   },
   fr: {
     ...logTexts.fr,
@@ -46,6 +51,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.fr,
     ...remindersTexts.fr,
     ...reportTexts.fr,
+    ...inboxTexts.fr,
+    ...chatTexts.fr,
   },
   es: {
     ...logTexts.es,
@@ -57,6 +64,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.es,
     ...remindersTexts.es,
     ...reportTexts.es,
+    ...inboxTexts.es,
+    ...chatTexts.es,
   },
   de: {
     ...logTexts.de,
@@ -68,6 +77,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.de,
     ...remindersTexts.de,
     ...reportTexts.de,
+    ...inboxTexts.de,
+    ...chatTexts.de,
   },
   pt: {
     ...logTexts.pt,
@@ -79,5 +90,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...lockTexts.pt,
     ...remindersTexts.pt,
     ...reportTexts.pt,
+    ...inboxTexts.pt,
+    ...chatTexts.pt,
   },
 };

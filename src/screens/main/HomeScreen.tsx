@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import HealthAlerts from '../../components/HealthAlerts';
 import LogSheet from '../../components/LogSheet';
 import { useCycle } from '../../context/CycleContext';
 import type { LogKind } from '../../data/logOptions';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
+import type { RootStackParamList } from '../../navigation/RootNavigator';
 import { cardShadow, colors } from '../../theme';
 import { getCycleProfile } from '../../utils/cycleFromAnswers';
 import { buildForecast, toIsoDate } from '../../utils/forecast';
@@ -24,7 +27,8 @@ export default function HomeScreen() {
   const { user, answers } = useUser();
   const { periods, logs, startPeriod, endPeriod, undoToday } = useCycle();
   const [logKind, setLogKind] = useState<LogKind | null>(null);
-  const { t, dir, formatDate } = useI18n();
+  const { t, dir, isRTL, formatDate } = useI18n();
+const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
 
   const profile = getCycleProfile(answers);
@@ -75,8 +79,18 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Header: greeting, date and current mode */}
-        <View style={styles.header}>
-          <Text style={[styles.greeting, text]}>
+        <View style={[styles.header, isRTL ? { paddingLeft: 60 } : { paddingRight: 60 }]}>
+  {/* Chat assistant: opposite corner to the greeting */}
+  <TouchableOpacity
+    style={[styles.chatButton, isRTL ? { left: 0 } : { right: 0 }]}
+    activeOpacity={0.85}
+    onPress={() => navigation.navigate('Chat')}
+    accessibilityRole="button"
+    accessibilityLabel={t('chat.open')}
+  >
+    <Ionicons name="chatbubble-ellipses" size={24} color={colors.rose} />
+  </TouchableOpacity>
+  <Text style={[styles.greeting, text]}>
             {firstName ? t('home.greeting', { name: firstName }) : t('home.greetingAnon')}
           </Text>
           <Text style={[styles.date, text]}>{dateText}</Text>
@@ -227,6 +241,17 @@ const styles = StyleSheet.create({
 
   // Header
   header: { marginBottom: 24 },
+chatButton: {
+  position: 'absolute',
+  top: 0,
+  width: 48,
+  height: 48,
+  borderRadius: 24,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: colors.white,
+  ...cardShadow,
+},
   greeting: { fontSize: 30, fontWeight: '700', color: colors.text },
   date: { fontSize: 15, color: colors.muted, marginTop: 4 },
   badge: {

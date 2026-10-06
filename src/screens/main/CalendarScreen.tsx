@@ -321,7 +321,7 @@ export default function CalendarScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.cream },
   content: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 32 },
-  title: { fontSize: 30, fontWeight: '700', color: colors.text, marginBottom: 16 },
+title: { fontSize: 30, fontWeight: '700', color: colors.text, marginBottom: 16 },
 
   // Month header
   monthRow: { alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
@@ -403,5 +403,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.rose,
   },
+  
   periodButtonText: { fontSize: 15, fontWeight: '600', color: colors.rose },
 });
