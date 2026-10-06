@@ -137,7 +137,7 @@ The same checks run on GitHub for every push (`.github/workflows/ci.yml`).
 - [x] App lock (PIN / biometrics)
 - [x] Reminders
 - [x] PDF report for the doctor
-- [ ] Ramadan mode and Hijri calendar (planned for later)
+
 
 ## Note
 
