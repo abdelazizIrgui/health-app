@@ -125,7 +125,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   // The only place where data is deleted. CycleProvider clears periods and logs when user is null.
   const deleteAllData = useCallback(async () => {
-    await AsyncStorage.multiRemove([STORAGE_KEY, ANSWERS_KEY, DONE_KEY, SIGNED_IN_KEY]);
+        await AsyncStorage.multiRemove([
+      STORAGE_KEY,
+      ANSWERS_KEY,
+      DONE_KEY,
+      SIGNED_IN_KEY,
+      '@health_app/chat_consent', // the chat agreement goes with the rest of her data
+    ]);
     setUser(null);
     setAnswers({});
     setOnboardingDone(false);
