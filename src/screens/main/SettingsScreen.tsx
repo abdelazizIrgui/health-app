@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
+  Linking,
   ScrollView,
   Share,
   StyleSheet,
@@ -14,7 +16,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 import LanguageSheet from '../../components/LanguageSheet';
 import PinSheet, { PinMode } from '../../components/PinSheet';
+import ReminderSheet from '../../components/ReminderSheet';
 import RestoreSheet from '../../components/RestoreSheet';
+import { PRIVACY_POLICY_URL } from '../../config';
+import { useDoctorReport } from '../../context/useDoctorReport';
 import { useLock } from '../../context/LockContext';
 import { useBackup } from '../../context/useBackup';
 import { useUser } from '../../context/UserContext';
@@ -26,6 +31,9 @@ export default function SettingsScreen() {
   const { user, signOut, deleteAllData } = useUser();
   const { t, dir, language, languageInfo, setLanguage } = useI18n();
   const { exportText } = useBackup();
+  const { createAndShare } = useDoctorReport();
+  const [showReminders, setShowReminders] = useState(false);
+  const [makingReport, setMakingReport] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
   const [showRestore, setShowRestore] = useState(false);
   const { enabled, biometricsAvailable, biometricsOn, setBiometrics } = useLock();
@@ -54,6 +62,20 @@ export default function SettingsScreen() {
     Alert.alert(t('settings.exportTitle'), t('settings.exportMessage'), [
       { text: t('common.cancel'), style: 'cancel' },
       { text: t('settings.exportConfirm'), onPress: doExport },
+    ]);
+  };
+
+  const doReport = async () => {
+    setMakingReport(true);
+    const result = await createAndShare();
+    setMakingReport(false);
+    if (result === 'error') Alert.alert(t('report.error'));
+  };
+
+  const confirmReport = () => {
+    Alert.alert(t('report.confirmTitle'), t('report.confirmMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('report.confirmButton'), onPress: doReport },
     ]);
   };
 
@@ -89,6 +111,29 @@ export default function SettingsScreen() {
           <Ionicons name="language-outline" size={22} color={colors.rose} />
           <Text style={[styles.rowLabel, text]}>{t('settings.language')}</Text>
           <Text style={styles.rowValue}>{languageInfo.native}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.row, { flexDirection: dir.row }]}
+          activeOpacity={0.8}
+          onPress={() => setShowReminders(true)}
+          accessibilityRole="button"
+        >
+          <Ionicons name="notifications-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('settings.reminders')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.row, { flexDirection: dir.row }, makingReport && styles.rowBusy]}
+          activeOpacity={0.8}
+          onPress={confirmReport}
+          disabled={makingReport}
+          accessibilityRole="button"
+          accessibilityState={{ busy: makingReport }}
+        >
+          <Ionicons name="document-text-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('settings.report')}</Text>
+          {makingReport && <ActivityIndicator color={colors.rose} />}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -153,6 +198,18 @@ export default function SettingsScreen() {
           </View>
         )}
 
+        {PRIVACY_POLICY_URL !== '' && (
+          <TouchableOpacity
+            style={[styles.row, { flexDirection: dir.row }]}
+            activeOpacity={0.8}
+            onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+            accessibilityRole="link"
+          >
+            <Ionicons name="shield-checkmark-outline" size={22} color={colors.rose} />
+            <Text style={[styles.rowLabel, text]}>{t('settings.privacy')}</Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={styles.signOut}
           activeOpacity={0.8}
@@ -179,6 +236,8 @@ export default function SettingsScreen() {
         mode={pinMode ?? 'create'}
         onClose={() => setPinMode(null)}
       />
+
+      <ReminderSheet visible={showReminders} onClose={() => setShowReminders(false)} />
 
       <RestoreSheet visible={showRestore} onClose={() => setShowRestore(false)} confirmReplace />
 
@@ -230,6 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     ...cardShadow,
   },
+  rowBusy: { opacity: 0.6 },
   rowLabel: { flex: 1, fontSize: 16, fontWeight: '600', color: colors.text },
   rowValue: { fontSize: 15, color: colors.muted },
   hint: { marginTop: 8, marginHorizontal: 8, fontSize: 13, lineHeight: 20, color: colors.muted },

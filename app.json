@@ -3,13 +3,23 @@
     "name": "Health Tracker",
     "slug": "health-tracker",
     "version": "1.0.0",
+    "scheme": "healthtracker",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "description": "A private period tracker. Your data stays on your phone.",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.changeme.healthtracker",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.changeme.healthtracker",
+      "versionCode": 1,
+      "allowBackup": false,
       "adaptiveIcon": {
         "backgroundColor": "#FF9EBB",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -23,6 +33,24 @@
     },
     "plugins": [
       "@react-native-community/datetimepicker",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#FFF7FA"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#D6336C",
+          "defaultChannel": "reminders"
+        }
+      ],
       [
         "expo-local-authentication",
         {

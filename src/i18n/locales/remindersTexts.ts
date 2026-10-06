@@ -1,0 +1,136 @@
+import type { LanguageCode } from '../languages';
+
+/**
+ * Texts for the reminders (Settings sheet and the notifications themselves).
+ * The notification texts are discreet on purpose: nothing sensitive shows on a lock screen.
+ */
+export const remindersTexts: Record<LanguageCode, Record<string, string>> = {
+  en: {
+    'settings.reminders': 'Reminders',
+    'reminders.title': 'Reminders',
+    'reminders.period': 'Before my period',
+    'reminders.periodHint': 'A gentle heads-up a few days before your expected period.',
+    'reminders.daysBefore.one': '{n} day before',
+    'reminders.daysBefore.other': '{n} days before',
+    'reminders.noForecast': 'This starts working once the app can estimate your next period.',
+    'reminders.daily': 'Daily check-in',
+    'reminders.dailyHint': 'A reminder to note how you feel today.',
+    'reminders.time': 'Time',
+    'reminders.discreet':
+      'Reminder texts are discreet, so nothing sensitive shows on your lock screen.',
+    'reminders.deniedTitle': 'Notifications are off',
+    'reminders.deniedMessage':
+      'Allow notifications for Health Tracker in your phone settings to get reminders.',
+    'reminders.openSettings': 'Open settings',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'A gentle heads-up: take a look at your calendar.',
+    'reminders.notif.daily': 'How was your day? Take a moment to check in.',
+  },
+  ar: {
+    'settings.reminders': 'التذكيرات',
+    'reminders.title': 'التذكيرات',
+    'reminders.period': 'قبل موعد دورتي',
+    'reminders.periodHint': 'تنبيه لطيف قبل موعد دورتك المتوقع بعدة أيام.',
+    'reminders.daysBefore.one': 'قبل يوم واحد',
+    'reminders.daysBefore.two': 'قبل يومين',
+    'reminders.daysBefore.few': 'قبل {n} أيام',
+    'reminders.daysBefore.other': 'قبل {n} يوماً',
+    'reminders.noForecast': 'يبدأ العمل عندما يستطيع التطبيق تقدير موعد دورتك القادمة.',
+    'reminders.daily': 'تسجيل يومي',
+    'reminders.dailyHint': 'تذكير لتسجيلي شعورك اليوم.',
+    'reminders.time': 'الوقت',
+    'reminders.discreet': 'نصوص التذكيرات مبهمة عمداً، فلا يظهر شيء حساس على شاشة القفل.',
+    'reminders.deniedTitle': 'الإشعارات متوقفة',
+    'reminders.deniedMessage':
+      'اسمحي بالإشعارات لتطبيق Health Tracker من إعدادات هاتفك لتصلك التذكيرات.',
+    'reminders.openSettings': 'فتح الإعدادات',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'تنبيه لطيف: ألقي نظرة على التقويم.',
+    'reminders.notif.daily': 'كيف كان يومك؟ خذي لحظة للتسجيل.',
+  },
+  fr: {
+    'settings.reminders': 'Rappels',
+    'reminders.title': 'Rappels',
+    'reminders.period': 'Avant mes règles',
+    'reminders.periodHint': 'Un petit rappel quelques jours avant vos règles prévues.',
+    'reminders.daysBefore.one': '{n} jour avant',
+    'reminders.daysBefore.other': '{n} jours avant',
+    'reminders.noForecast':
+      "Cela fonctionne dès que l'application peut estimer vos prochaines règles.",
+    'reminders.daily': 'Suivi quotidien',
+    'reminders.dailyHint': "Un rappel pour noter comment vous vous sentez aujourd'hui.",
+    'reminders.time': 'Heure',
+    'reminders.discreet':
+      "Les textes des rappels sont discrets : rien de sensible n'apparaît sur l'écran verrouillé.",
+    'reminders.deniedTitle': 'Les notifications sont désactivées',
+    'reminders.deniedMessage':
+      'Autorisez les notifications pour Health Tracker dans les réglages de votre téléphone pour recevoir les rappels.',
+    'reminders.openSettings': 'Ouvrir les réglages',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'Petit rappel : jetez un œil à votre calendrier.',
+    'reminders.notif.daily': "Comment s'est passée votre journée ? Prenez un instant pour noter.",
+  },
+  es: {
+    'settings.reminders': 'Recordatorios',
+    'reminders.title': 'Recordatorios',
+    'reminders.period': 'Antes de mi periodo',
+    'reminders.periodHint': 'Un aviso suave unos días antes de tu periodo previsto.',
+    'reminders.daysBefore.one': '{n} día antes',
+    'reminders.daysBefore.other': '{n} días antes',
+    'reminders.noForecast': 'Funciona cuando la app pueda estimar tu próximo periodo.',
+    'reminders.daily': 'Registro diario',
+    'reminders.dailyHint': 'Un recordatorio para anotar cómo te sientes hoy.',
+    'reminders.time': 'Hora',
+    'reminders.discreet':
+      'Los textos de los recordatorios son discretos: no se muestra nada sensible en la pantalla de bloqueo.',
+    'reminders.deniedTitle': 'Las notificaciones están desactivadas',
+    'reminders.deniedMessage':
+      'Permite las notificaciones de Health Tracker en los ajustes del teléfono para recibir recordatorios.',
+    'reminders.openSettings': 'Abrir ajustes',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'Un aviso suave: echa un vistazo a tu calendario.',
+    'reminders.notif.daily': '¿Cómo ha ido tu día? Tómate un momento para anotarlo.',
+  },
+  de: {
+    'settings.reminders': 'Erinnerungen',
+    'reminders.title': 'Erinnerungen',
+    'reminders.period': 'Vor meiner Periode',
+    'reminders.periodHint': 'Ein sanfter Hinweis einige Tage vor deiner erwarteten Periode.',
+    'reminders.daysBefore.one': '{n} Tag vorher',
+    'reminders.daysBefore.other': '{n} Tage vorher',
+    'reminders.noForecast': 'Das funktioniert, sobald die App deine nächste Periode schätzen kann.',
+    'reminders.daily': 'Tägliches Eintragen',
+    'reminders.dailyHint': 'Eine Erinnerung, festzuhalten, wie du dich heute fühlst.',
+    'reminders.time': 'Uhrzeit',
+    'reminders.discreet':
+      'Die Erinnerungstexte sind unauffällig, damit nichts Sensibles auf dem Sperrbildschirm erscheint.',
+    'reminders.deniedTitle': 'Benachrichtigungen sind aus',
+    'reminders.deniedMessage':
+      'Erlaube Benachrichtigungen für Health Tracker in den Telefoneinstellungen, um Erinnerungen zu erhalten.',
+    'reminders.openSettings': 'Einstellungen öffnen',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'Ein sanfter Hinweis: Wirf einen Blick in deinen Kalender.',
+    'reminders.notif.daily': 'Wie war dein Tag? Nimm dir einen Moment zum Eintragen.',
+  },
+  pt: {
+    'settings.reminders': 'Lembretes',
+    'reminders.title': 'Lembretes',
+    'reminders.period': 'Antes da minha menstruação',
+    'reminders.periodHint': 'Um aviso suave alguns dias antes da menstruação prevista.',
+    'reminders.daysBefore.one': '{n} dia antes',
+    'reminders.daysBefore.other': '{n} dias antes',
+    'reminders.noForecast': 'Funciona quando a app conseguir estimar a tua próxima menstruação.',
+    'reminders.daily': 'Registo diário',
+    'reminders.dailyHint': 'Um lembrete para anotares como te sentes hoje.',
+    'reminders.time': 'Hora',
+    'reminders.discreet':
+      'Os textos dos lembretes são discretos: nada sensível aparece no ecrã de bloqueio.',
+    'reminders.deniedTitle': 'As notificações estão desativadas',
+    'reminders.deniedMessage':
+      'Permite as notificações do Health Tracker nas definições do telemóvel para receberes lembretes.',
+    'reminders.openSettings': 'Abrir definições',
+    'reminders.notif.title': 'Health Tracker',
+    'reminders.notif.period': 'Um aviso suave: dá uma vista de olhos ao calendário.',
+    'reminders.notif.daily': 'Como foi o teu dia? Tira um momento para registar.',
+  },
+};
