@@ -10,14 +10,14 @@
     "description": "A private period tracker. Your data stays on your phone.",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.changeme.healthtracker",
+      "bundleIdentifier": "com.abdelazizirgui.healthtracker",
       "buildNumber": "1",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.changeme.healthtracker",
+      "package": "com.abdelazizirgui.healthtracker",
       "versionCode": 1,
       "allowBackup": false,
       "adaptiveIcon": {

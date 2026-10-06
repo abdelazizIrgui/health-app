@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
+import { NOTIFICATIONS_AVAILABLE, Notifications } from '../notifications';
 
 import { useI18n } from '../i18n/I18nContext';
 import { getCycleProfile } from '../utils/cycleFromAnswers';
@@ -25,7 +25,7 @@ import { useUser } from './UserContext';
 
 const STORAGE_KEY = '@health_app/reminders';
 const CHANNEL_ID = 'reminders';
-const SUPPORTED = Platform.OS === 'ios' || Platform.OS === 'android';
+const SUPPORTED = NOTIFICATIONS_AVAILABLE; // false in Expo Go: the reminders then do nothing
 
 // Show a reminder as a banner even while the app is open.
 if (SUPPORTED) {

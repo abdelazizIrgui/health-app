@@ -188,14 +188,9 @@ export default function HomeScreen() {
           </View>
         )}
         <HealthAlerts />
-        {/* Quick log buttons (horizontal scroll) */}
+        {/* Quick log buttons: three equal cards that fill the width, so they are centered */}
         <Text style={[styles.sectionTitle, text]}>{t('home.quickLog')}</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.actionsScroll}
-          contentContainerStyle={[styles.actionsContent, { flexDirection: dir.row, flexGrow: 1 }]}
-        >
+        <View style={[styles.actionsRow, { flexDirection: dir.row }]}>
           {QUICK_ACTIONS.map((action) => (
             <TouchableOpacity
               key={action.id}
@@ -208,10 +203,12 @@ export default function HomeScreen() {
               <View style={[styles.actionIcon, isLoggedToday(action.id) && styles.actionIconOn]}>
                 <MaterialCommunityIcons name={action.icon} size={30} color={colors.rose} />
               </View>
-              <Text style={styles.actionLabel}>{t(action.labelKey)}</Text>
+              <Text style={styles.actionLabel} numberOfLines={2}>
+                {t(action.labelKey)}
+              </Text>
             </TouchableOpacity>
           ))}
-        </ScrollView>
+        </View>
 
         <Text style={[styles.disclaimer, text]}>{t('cycle.disclaimer')}</Text>
       </ScrollView>
@@ -335,12 +332,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.text,
   },
-  actionsScroll: { marginHorizontal: -20 }, // let the row scroll edge to edge
-  actionsContent: { paddingHorizontal: 20, paddingVertical: 8, gap: 12 },
+  actionsRow: { gap: 12, paddingVertical: 8 },
   actionButton: {
-    width: 116,
+    flex: 1,
     alignItems: 'center',
     paddingVertical: 16,
+    paddingHorizontal: 6,
     borderRadius: 20,
     backgroundColor: colors.white,
     ...cardShadow,
@@ -355,7 +352,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.peachSoft,
   },
   actionIconOn: { backgroundColor: colors.peach },
-  actionLabel: { fontSize: 14, fontWeight: '600', color: colors.text },
+  actionLabel: { fontSize: 13, fontWeight: '600', color: colors.text, textAlign: 'center' },
 
   disclaimer: { marginTop: 24, fontSize: 12, lineHeight: 18, color: colors.muted },
 });

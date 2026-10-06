@@ -19,6 +19,8 @@ export function useDoctorReport() {
 
   const createAndShare = async (): Promise<ReportResult> => {
     if (!user) return 'error';
+    // Remembers which step is running, so the warning says where it failed.
+    let step = 'prepare';
     try {
       const profile = getCycleProfile(answers);
       const data = buildReportData({
@@ -31,27 +33,54 @@ export function useDoctorReport() {
       });
       const html = buildReportHtml(data, { t, formatDate, language, rtl: isRTL });
 
+      step = 'print';
       const { uri } = await Print.printToFileAsync({ html });
 
       // Give the file a readable name (the printer makes a random one).
+      step = 'rename';
       let shareUri = uri;
       try {
         const target = new File(Paths.cache, `cycle-report-${toIsoDate(new Date())}.pdf`);
-        await new File(uri).move(target, { overwrite: true });
+        if (target.exists) target.delete();
+        new File(uri).move(target);
         shareUri = target.uri;
       } catch (e) {
         console.warn('Could not rename the report, sharing it as it is', e);
       }
 
-      if (!(await Sharing.isAvailableAsync())) return 'error';
-      await Sharing.shareAsync(shareUri, {
+      step = 'check-share';
+      if (!(await Sharing.isAvailableAsync())) {
+        console.warn('Report failed at step: sharing is not available on this device');
+        return 'error';
+      }
+
+      // Try the renamed file first, then the original one, with the options and then without.
+      step = 'share';
+      const options = {
         mimeType: 'application/pdf',
         UTI: 'com.adobe.pdf',
         dialogTitle: t('report.shareTitle'),
-      });
-      return 'ok';
+      };
+      const attempts: { file: string; withOptions: boolean }[] = [
+        { file: shareUri, withOptions: true },
+        { file: shareUri, withOptions: false },
+      ];
+      if (shareUri !== uri) {
+        attempts.push({ file: uri, withOptions: true }, { file: uri, withOptions: false });
+      }
+      let lastError: unknown = null;
+      for (const attempt of attempts) {
+        try {
+          if (attempt.withOptions) await Sharing.shareAsync(attempt.file, options);
+          else await Sharing.shareAsync(attempt.file);
+          return 'ok';
+        } catch (e) {
+          lastError = e;
+        }
+      }
+      throw lastError;
     } catch (e) {
-      console.warn('Could not create the report', e);
+      console.warn(`Report failed at step: ${step}.`, e);
       return 'error';
     }
   };
