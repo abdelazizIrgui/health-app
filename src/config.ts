@@ -10,4 +10,4 @@
  */
 export const PRIVACY_POLICY_URL = '';
 
-export const CHAT_API_URL = 'https://health-chat.abdelazizirgui.workers.dev/chat';
+export const CHAT_API_URL = 'https://health-chat.yyut7773.workers.dev';

@@ -9,6 +9,7 @@ import LogSheet from '../../components/LogSheet';
 import { useCycle } from '../../context/CycleContext';
 import type { LogKind } from '../../data/logOptions';
 import { useUser } from '../../context/UserContext';
+import ChatBotIcon from '../../components/ChatBotIcon';
 import { useI18n } from '../../i18n/I18nContext';
 import type { RootStackParamList } from '../../navigation/RootNavigator';
 import { cardShadow, colors } from '../../theme';
@@ -88,7 +89,7 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
     accessibilityRole="button"
     accessibilityLabel={t('chat.open')}
   >
-    <Ionicons name="chatbubble-ellipses" size={24} color={colors.rose} />
+    <ChatBotIcon tail={isRTL ? 'right' : 'left'} />
   </TouchableOpacity>
   <Text style={[styles.greeting, text]}>
             {firstName ? t('home.greeting', { name: firstName }) : t('home.greetingAnon')}
@@ -244,13 +245,8 @@ const styles = StyleSheet.create({
 chatButton: {
   position: 'absolute',
   top: 0,
-  width: 48,
-  height: 48,
-  borderRadius: 24,
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: colors.white,
-  ...cardShadow,
+  width: 56,
+  height: 56,
 },
   greeting: { fontSize: 30, fontWeight: '700', color: colors.text },
   date: { fontSize: 15, color: colors.muted, marginTop: 4 },

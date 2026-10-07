@@ -19,7 +19,7 @@ export const cycleTexts: Record<LanguageCode, Record<string, string>> = {
   ar: {
     'cycle.startToday': 'بدأت دورتي اليوم',
     'cycle.endToday': 'انتهت دورتي اليوم',
-    'cycle.undo': 'تراجع',
+    'cycle.undo': 'تراجع عن التسجيل',
     'cycle.nextPeriod': 'الدورة القادمة',
     'cycle.anyDay': 'الدورة متوقعة في أي يوم الآن',
     'cycle.late.one': 'تأخرت الدورة يوماً واحداً',
