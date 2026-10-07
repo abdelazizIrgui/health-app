@@ -20,7 +20,7 @@ const MAX_CHARS = 1000;
 const RATE_LIMIT = 20; // questions per IP per 10 minutes
 const WINDOW_MS = 10 * 60 * 1000;
 
-const LANGUAGES = { en: 'English', ar: 'Arabic', fr: 'French', es: 'Spanish', de: 'German', pt: 'Portuguese' };
+const LANGUAGES = { en: 'English', ar: 'Arabic', fr: 'French', es: 'Spanish', de: 'German', pt: 'Portuguese', zh: 'Chinese (Simplified)', ru: 'Russian' };
 
 const SYSTEM = `You are the friendly assistant inside a private period-tracking app. Girls and women ask you about their menstrual cycle, periods, PMS, cramps, flow, ovulation, hygiene and how they feel.
 

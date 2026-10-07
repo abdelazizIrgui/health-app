@@ -1,4 +1,4 @@
-export type LanguageCode = 'en' | 'ar' | 'fr' | 'es' | 'de' | 'pt';
+export type LanguageCode = 'en' | 'ar' | 'fr' | 'es' | 'de' | 'pt'|'zh'|'ru';
 
 export interface Language {
   code: LanguageCode;
@@ -17,6 +17,8 @@ export const LANGUAGES: Language[] = [
   { code: 'es', native: 'Español', english: 'Spanish', rtl: false, locale: 'es-ES' },
   { code: 'de', native: 'Deutsch', english: 'German', rtl: false, locale: 'de-DE' },
   { code: 'pt', native: 'Português', english: 'Portuguese', rtl: false, locale: 'pt-PT' },
+  { code: 'zh', native: '简体中文', english: 'Chinese', rtl: false, locale: 'zh-CN' },
+  { code: 'ru', native: 'Русский', english: 'Russian', rtl: false, locale: 'ru-RU' },
 ];
 
 export const DEFAULT_LANGUAGE: LanguageCode = 'en';

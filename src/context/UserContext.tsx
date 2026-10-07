@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { Answers } from '../data/questions';
+import { deletePhotoFile } from '../utils/profilePhoto';
 
 export interface UserProfile {
   name: string;
@@ -9,6 +10,7 @@ export interface UserProfile {
   phone: string;
   birthDate: string; // ISO date, e.g. "1998-04-21"
   language: string; // language code, e.g. "en", "ar", "fr"
+  photoUri?: string; // profile photo saved on this device (optional)
 }
 
 interface UserContextValue {
@@ -22,6 +24,8 @@ interface UserContextValue {
   /** False after "Sign out": the data stays on the device, she just has to sign in again. */
   signedIn: boolean;
   register: (profile: UserProfile) => Promise<void>;
+  /** Changes some fields of the saved profile (for example the photo). */
+  updateProfile: (patch: Partial<UserProfile>) => Promise<void>;
   /** Saves progress while the questionnaire is still in progress. */
   saveAnswers: (answers: Answers) => Promise<void>;
   /** Saves the final answers and opens the main app. */
@@ -31,11 +35,10 @@ interface UserContextValue {
   /** Signs back in to the profile saved on this device. */
   signIn: () => Promise<void>;
   /** Permanently deletes the profile, answers, periods and daily logs from this device. */
-    deleteAllData: () => Promise<void>;
+  deleteAllData: () => Promise<void>;
   /** Puts back a profile and answers read from a backup, and signs her in. */
   restoreUser: (profile: UserProfile, answers: Answers, onboardingDone: boolean) => Promise<void>;
 }
-
 
 const STORAGE_KEY = '@health_app/user_profile';
 const ANSWERS_KEY = '@health_app/answers';
@@ -86,6 +89,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setUser(profile); // RootNavigator reacts to this and opens the questionnaire
   }, []);
 
+  const updateProfile = useCallback(
+    async (patch: Partial<UserProfile>) => {
+      if (!user) return;
+      const next = { ...user, ...patch };
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      setUser(next);
+    },
+    [user]
+  );
+
   const saveAnswers = useCallback(async (next: Answers) => {
     setAnswers(next);
     try {
@@ -125,7 +138,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   // The only place where data is deleted. CycleProvider clears periods and logs when user is null.
   const deleteAllData = useCallback(async () => {
-        await AsyncStorage.multiRemove([
+    deletePhotoFile(user?.photoUri); // the photo is part of her data too
+    await AsyncStorage.multiRemove([
       STORAGE_KEY,
       ANSWERS_KEY,
       DONE_KEY,
@@ -136,9 +150,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setAnswers({});
     setOnboardingDone(false);
     setSignedIn(true); // RootNavigator goes back to Welcome > Register
-  }, []);
+  }, [user]);
 
-    const restoreUser = useCallback(
+  const restoreUser = useCallback(
     async (profile: UserProfile, restoredAnswers: Answers, done: boolean) => {
       await AsyncStorage.multiSet([
         [STORAGE_KEY, JSON.stringify(profile)],
@@ -162,6 +176,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       loading,
       signedIn,
       register,
+      updateProfile,
       saveAnswers,
       completeOnboarding,
       signOut,
@@ -176,12 +191,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       loading,
       signedIn,
       register,
+      updateProfile,
       saveAnswers,
       completeOnboarding,
       signOut,
       signIn,
       deleteAllData,
-            restoreUser,
+      restoreUser,
     ]
   );
 

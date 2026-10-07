@@ -14,6 +14,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
+import Avatar from '../../components/Avatar';
+import ProfileSheet from '../../components/ProfileSheet';
 import LanguageSheet from '../../components/LanguageSheet';
 import PinSheet, { PinMode } from '../../components/PinSheet';
 import ReminderSheet from '../../components/ReminderSheet';
@@ -35,11 +37,11 @@ export default function SettingsScreen() {
   const [showReminders, setShowReminders] = useState(false);
   const [makingReport, setMakingReport] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [showRestore, setShowRestore] = useState(false);
   const { enabled, biometricsAvailable, biometricsOn, setBiometrics } = useLock();
   const [pinMode, setPinMode] = useState<PinMode | null>(null);
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
-  const initial = user?.name.trim().charAt(0).toUpperCase() || '?';
 
   const confirmSignOut = () => {
     Alert.alert(t('settings.signOutTitle'), t('settings.signOutMessage'), [
@@ -91,15 +93,34 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={[styles.title, text]}>{t('settings.title')}</Text>
 
-        <View style={[styles.card, { flexDirection: dir.row }]}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initial}</Text>
-          </View>
+        <TouchableOpacity
+          style={[styles.card, { flexDirection: dir.row }]}
+          activeOpacity={0.85}
+          onPress={() => setShowProfile(true)}
+          accessibilityRole="button"
+          accessibilityLabel={t('settings.myProfile')}
+        >
+          <Avatar uri={user?.photoUri} name={user?.name} size={56} />
           <View style={styles.info}>
             <Text style={[styles.name, text]}>{user?.name}</Text>
             <Text style={[styles.email, text]}>{user?.email}</Text>
           </View>
-        </View>
+          <Ionicons
+            name={dir.row === 'row' ? 'chevron-forward' : 'chevron-back'}
+            size={20}
+            color={colors.muted}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.row, { flexDirection: dir.row }]}
+          activeOpacity={0.8}
+          onPress={() => setShowProfile(true)}
+          accessibilityRole="button"
+        >
+          <Ionicons name="person-circle-outline" size={22} color={colors.rose} />
+          <Text style={[styles.rowLabel, text]}>{t('settings.myProfile')}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.row, { flexDirection: dir.row }]}
@@ -237,6 +258,8 @@ export default function SettingsScreen() {
         onClose={() => setPinMode(null)}
       />
 
+      <ProfileSheet visible={showProfile} onClose={() => setShowProfile(false)} />
+
       <ReminderSheet visible={showReminders} onClose={() => setShowReminders(false)} />
 
       <RestoreSheet visible={showRestore} onClose={() => setShowRestore(false)} confirmReplace />
@@ -267,15 +290,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     ...cardShadow,
   },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.peach,
-  },
-  avatarText: { fontSize: 24, fontWeight: '700', color: colors.text },
   info: { flex: 1 },
   name: { fontSize: 18, fontWeight: '700', color: colors.text },
   email: { marginTop: 2, fontSize: 14, color: colors.muted },

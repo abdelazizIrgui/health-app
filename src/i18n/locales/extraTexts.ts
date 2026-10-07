@@ -10,6 +10,9 @@ import { logTexts } from './logTexts';
 import { remindersTexts } from './remindersTexts';
 import { reportTexts } from './reportTexts';
 import { inboxTexts } from './inboxTexts';
+import { countryTexts } from './countryTexts';
+import { profileTexts } from './profileTexts';
+
 /**
  * All the extra translation files in one place.
  * When you add a new texts file, add one line per language here.
@@ -20,6 +23,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...calendarTexts.en,
     ...insightsTexts.en,
     ...accountTexts.en,
+    ...countryTexts.en, 
+    ...profileTexts.en,  
     ...alertsTexts.en,
     ...backupTexts.en,
     ...lockTexts.en,
@@ -27,12 +32,15 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.en,
     ...inboxTexts.en,
     ...chatTexts.en,
+    
   },
   ar: {
     ...logTexts.ar,
     ...calendarTexts.ar,
     ...insightsTexts.ar,
     ...accountTexts.ar,
+    ...countryTexts.ar, 
+    ...profileTexts.ar,  
     ...alertsTexts.ar,
     ...backupTexts.ar,
     ...lockTexts.ar,
@@ -46,6 +54,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...calendarTexts.fr,
     ...insightsTexts.fr,
     ...accountTexts.fr,
+    ...countryTexts.fr,
+    ...profileTexts.fr,
     ...alertsTexts.fr,
     ...backupTexts.fr,
     ...lockTexts.fr,
@@ -59,6 +69,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...calendarTexts.es,
     ...insightsTexts.es,
     ...accountTexts.es,
+    ...countryTexts.es,
+    ...profileTexts.es,
     ...alertsTexts.es,
     ...backupTexts.es,
     ...lockTexts.es,
@@ -72,6 +84,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...calendarTexts.de,
     ...insightsTexts.de,
     ...accountTexts.de,
+    ...countryTexts.de, 
+    ...profileTexts.de,  
     ...alertsTexts.de,
     ...backupTexts.de,
     ...lockTexts.de,
@@ -85,6 +99,8 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...calendarTexts.pt,
     ...insightsTexts.pt,
     ...accountTexts.pt,
+    ...countryTexts.pt,
+    ...profileTexts.pt,   
     ...alertsTexts.pt,
     ...backupTexts.pt,
     ...lockTexts.pt,

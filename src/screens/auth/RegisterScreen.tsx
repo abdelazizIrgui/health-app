@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,19 +16,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
+import Avatar from '../../components/Avatar';
 import BottomSheet from '../../components/BottomSheet';
+import CountrySheet from '../../components/CountrySheet';
 import LanguageSheet from '../../components/LanguageSheet';
 import RestoreLink from '../../components/RestoreLink';
 import { useUser } from '../../context/UserContext';
 import { useI18n } from '../../i18n/I18nContext';
 import { colors } from '../../theme';
+import { deletePhotoFile, pickProfilePhoto } from '../../utils/profilePhoto';
+import {
+  DEFAULT_COUNTRY,
+  detectCountry,
+  formatAsTyped,
+  getCountry,
+  countryName,
+  phonePlaceholder,
+  toInternational,
+} from '../../utils/countries';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
 // ---------- Constants ----------
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^\+?[0-9\s\-()]+$/;
 const DEFAULT_BIRTH = new Date(2000, 0, 1); // where the picker starts
 
 // ---------- Helpers ----------
@@ -44,10 +56,12 @@ interface FieldProps extends TextInputProps {
   error?: string;
   inputRef?: React.Ref<TextInput>;
   rightSlot?: React.ReactNode;
+  /** Shown before the text, e.g. the calling code "+212". */
+  prefix?: string;
 }
 
 /** Labeled text input with a leading icon and an inline error message. */
-function Field({ label, icon, error, inputRef, rightSlot, ...inputProps }: FieldProps) {
+function Field({ label, icon, error, inputRef, rightSlot, prefix, ...inputProps }: FieldProps) {
   const { dir } = useI18n();
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   return (
@@ -57,6 +71,7 @@ function Field({ label, icon, error, inputRef, rightSlot, ...inputProps }: Field
         style={[styles.inputRow, { flexDirection: dir.row }, error ? styles.inputRowError : null]}
       >
         <Ionicons name={icon} size={20} color={colors.muted} />
+        {prefix ? <Text style={styles.prefix}>{prefix}</Text> : null}
         <TextInput
           ref={inputRef}
           style={[styles.input, { textAlign: dir.align }]}
@@ -73,6 +88,8 @@ function Field({ label, icon, error, inputRef, rightSlot, ...inputProps }: Field
 interface SelectFieldProps {
   label: string;
   icon: IconName;
+  /** Replaces the icon (used for the country flag). */
+  leading?: string;
   value?: string;
   placeholder: string;
   error?: string;
@@ -80,7 +97,15 @@ interface SelectFieldProps {
 }
 
 /** Looks like an input, but opens a picker when tapped. */
-function SelectField({ label, icon, value, placeholder, error, onPress }: SelectFieldProps) {
+function SelectField({
+  label,
+  icon,
+  leading,
+  value,
+  placeholder,
+  error,
+  onPress,
+}: SelectFieldProps) {
   const { dir } = useI18n();
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
   return (
@@ -93,7 +118,11 @@ function SelectField({ label, icon, value, placeholder, error, onPress }: Select
         accessibilityRole="button"
         accessibilityLabel={`${label}: ${value ?? placeholder}`}
       >
-        <Ionicons name={icon} size={20} color={colors.muted} />
+        {leading ? (
+          <Text style={styles.flag}>{leading}</Text>
+        ) : (
+          <Ionicons name={icon} size={20} color={colors.muted} />
+        )}
         <Text style={[styles.input, styles.selectText, text, !value && styles.placeholder]}>
           {value ?? placeholder}
         </Text>
@@ -112,7 +141,6 @@ type Errors = {
   email?: string;
   phone?: string;
   birth?: string;
-  
 };
 
 export default function RegisterScreen() {
@@ -122,14 +150,42 @@ export default function RegisterScreen() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [country, setCountry] = useState(DEFAULT_COUNTRY); // ISO code
+  const [phone, setPhone] = useState(''); // national number, without the calling code
   const [birth, setBirth] = useState<Date | null>(null);
+  const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
 
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
 
   const [showIosDate, setShowIosDate] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
+  const [showCountries, setShowCountries] = useState(false);
+
+  const selectedCountry = getCountry(country);
+
+  const onPhoneChange = (value: string) => {
+    // Pasted a full international number? Switch to its country automatically.
+    const detected = detectCountry(value);
+    if (detected && detected !== country) {
+      setCountry(detected);
+      setPhone(formatAsTyped(detected, value).replace(/^\+\d+\s*/, ''));
+      return;
+    }
+    setPhone(formatAsTyped(country, value));
+  };
+
+  const choosePhoto = async () => {
+    try {
+      const uri = await pickProfilePhoto();
+      if (!uri) return;
+      deletePhotoFile(photoUri); // she changed her mind: remove the previous copy
+      setPhotoUri(uri);
+    } catch (e) {
+      console.warn('Could not pick the photo', e);
+      Alert.alert(t('profile.photoError'));
+    }
+  };
 
   const emailRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
@@ -155,15 +211,11 @@ export default function RegisterScreen() {
 
   const validate = () => {
     const next: Errors = {};
-    const phoneDigits = phone.replace(/\D/g, '');
 
     if (name.trim().length < 2) next.name = 'register.errName';
     if (!EMAIL_PATTERN.test(email.trim())) next.email = 'register.errEmail';
-    if (!PHONE_PATTERN.test(phone.trim()) || phoneDigits.length < 7 || phoneDigits.length > 15) {
-      next.phone = 'register.errPhone';
-    }
+    if (!toInternational(country, phone.trim())) next.phone = 'register.errPhone';
     if (!birth) next.birth = 'register.errBirth';
-    
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -177,9 +229,10 @@ export default function RegisterScreen() {
       await register({
         name: name.trim(),
         email: email.trim().toLowerCase(),
-        phone: phone.trim(),
+        phone: toInternational(country, phone.trim()) ?? phone.trim(), // e.g. +212612345678
         birthDate: toIsoDate(birth),
         language, // the app and the questions continue in this language
+        photoUri,
       });
     } catch {
       setErrors({ email: 'register.errSave' });
@@ -208,6 +261,20 @@ export default function RegisterScreen() {
           </View>
           <Text style={[styles.title, text]}>{t('register.title')}</Text>
           <Text style={[styles.subtitle, text]}>{t('register.subtitle')}</Text>
+
+          {/* Optional profile photo */}
+          <View style={styles.photoWrap}>
+            <Avatar
+              uri={photoUri}
+              name={name}
+              size={88}
+              onPress={choosePhoto}
+              accessibilityLabel={t(photoUri ? 'profile.changePhoto' : 'profile.addPhoto')}
+            />
+            <Text style={styles.photoHint}>
+              {t(photoUri ? 'profile.changePhoto' : 'profile.addPhoto')} ({t('profile.optional')})
+            </Text>
+          </View>
 
           {/* Language first: the whole form switches to it as soon as she picks one. */}
           <SelectField
@@ -243,12 +310,21 @@ export default function RegisterScreen() {
             returnKeyType="next"
             onSubmitEditing={() => phoneRef.current?.focus()}
           />
+          <SelectField
+            label={t('register.country')}
+            icon="globe-outline"
+            leading={selectedCountry.flag}
+            value={`${countryName(selectedCountry, language)} (+${selectedCountry.dial})`}
+            placeholder=""
+            onPress={() => setShowCountries(true)}
+          />
           <Field
             label={t('register.phone')}
             icon="call-outline"
-            placeholder="+212 6 00 00 00 00"
+            prefix={`+${selectedCountry.dial}`}
+            placeholder={phonePlaceholder(country)}
             value={phone}
-            onChangeText={setPhone}
+            onChangeText={onPhoneChange}
             error={err(errors.phone)}
             inputRef={phoneRef}
             keyboardType="phone-pad"
@@ -262,7 +338,6 @@ export default function RegisterScreen() {
             error={err(errors.birth)}
             onPress={openDatePicker}
           />
-        
 
           <TouchableOpacity
             style={[styles.button, submitting && styles.buttonDisabled]}
@@ -305,6 +380,19 @@ export default function RegisterScreen() {
         </BottomSheet>
       )}
 
+      <CountrySheet
+        visible={showCountries}
+        selected={country}
+        onSelect={(c) => {
+          setCountry(c.iso);
+          setPhone(''); // a number typed for another country would not match
+          setErrors((e) => ({ ...e, phone: undefined }));
+          setShowCountries(false);
+          setTimeout(() => phoneRef.current?.focus(), 300);
+        }}
+        onClose={() => setShowCountries(false)}
+      />
+
       <LanguageSheet
         visible={showLanguages}
         selected={language}
@@ -334,6 +422,9 @@ const styles = StyleSheet.create({
   title: { marginTop: 20, fontSize: 30, fontWeight: '700', color: colors.text },
   subtitle: { marginTop: 6, marginBottom: 28, fontSize: 15, color: colors.muted },
 
+  photoWrap: { alignItems: 'center', gap: 8, marginBottom: 24 },
+  photoHint: { fontSize: 14, color: colors.muted },
+
   fieldWrap: { marginBottom: 18 },
   label: { marginBottom: 8, fontSize: 14, fontWeight: '600', color: colors.text },
   inputRow: {
@@ -348,6 +439,8 @@ const styles = StyleSheet.create({
   },
   inputRowError: { borderColor: colors.rose },
   input: { flex: 1, fontSize: 16, color: colors.text },
+  flag: { fontSize: 20 },
+  prefix: { fontSize: 16, fontWeight: '600', color: colors.text },
   selectText: { paddingVertical: 0 },
   placeholder: { color: colors.muted },
   error: { marginTop: 6, fontSize: 13, color: colors.rose },

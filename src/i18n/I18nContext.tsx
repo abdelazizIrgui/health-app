@@ -8,6 +8,9 @@ import { fr } from './locales/fr';
 import { es } from './locales/es';
 import { de } from './locales/de';
 import { pt } from './locales/pt';
+import { zh } from './locales/zh';
+import { ru } from './locales/ru';
+
 import { cycleTexts } from './locales/cycleTexts';
 import { extraTexts } from './locales/extraTexts';
 
@@ -18,6 +21,8 @@ const DICTIONARIES: Record<LanguageCode, Dictionary> = {
   es: { ...es, ...cycleTexts.es, ...extraTexts.es },
   de: { ...de, ...cycleTexts.de, ...extraTexts.de },
   pt: { ...pt, ...cycleTexts.pt, ...extraTexts.pt },
+   zh, // Chinese and Russian keep all their texts in one file each
+  ru,
 };
 const STORAGE_KEY = '@health_app/language';
 
@@ -59,7 +64,22 @@ function detectDeviceLanguage(): LanguageCode {
 }
 
 /** Which plural form a number needs (Arabic has four forms, most others two). */
-function pluralCategory(language: LanguageCode, n: number): 'one' | 'two' | 'few' | 'other' {
+/**
+ * Which plural form a number needs.
+ * Arabic has four forms, Russian has one/few/many, Chinese has only one form, most others two.
+ */
+function pluralCategory(
+  language: LanguageCode,
+  n: number
+): 'one' | 'two' | 'few' | 'many' | 'other' {
+  if (language === 'zh') return 'other';
+  if (language === 'ru') {
+    const last = n % 10;
+    const lastTwo = n % 100;
+    if (last === 1 && lastTwo !== 11) return 'one';
+    if (last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14)) return 'few';
+    return 'many';
+  }
   if (language === 'ar') {
     if (n === 1) return 'one';
     if (n === 2) return 'two';

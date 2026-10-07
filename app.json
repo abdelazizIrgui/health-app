@@ -34,6 +34,12 @@
     "plugins": [
       "@react-native-community/datetimepicker",
       "expo-secure-store",
+            [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Health Tracker to access your photos to set a profile picture."
+        }
+      ],
       [
         "expo-splash-screen",
         {
