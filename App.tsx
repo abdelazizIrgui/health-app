@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,6 +11,8 @@ import { LockProvider } from './src/context/LockContext';
 import { ReminderProvider } from './src/context/ReminderContext';
 import { InboxProvider } from './src/context/InboxContext';
 import LockScreen from './src/components/LockScreen';
+import NotificationTapHandler from './src/components/NotificationTapHandler';
+import { navigationRef } from './src/navigation/navigationRef';
 import { I18nProvider } from './src/i18n/I18nContext';
 import { colors } from './src/theme';
 
@@ -28,6 +30,7 @@ const navTheme = {
 };
 
 export default function App() {
+  const [navReady, setNavReady] = useState(false);
   return (
     <SafeAreaProvider>
       <I18nProvider>
@@ -37,8 +40,13 @@ export default function App() {
               <InboxProvider>
                 <LockProvider>
                   <View style={{ flex: 1 }}>
-                    <NavigationContainer theme={navTheme}>
+                    <NavigationContainer
+                      ref={navigationRef}
+                      theme={navTheme}
+                      onReady={() => setNavReady(true)}
+                    >
                       <StatusBar style="dark" />
+                      <NotificationTapHandler navReady={navReady} />
                       <RootNavigator />
                     </NavigationContainer>
                     {/* Covers everything while the app is locked */}

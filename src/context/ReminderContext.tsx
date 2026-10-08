@@ -24,7 +24,9 @@ import { useCycle } from './CycleContext';
 import { useUser } from './UserContext';
 
 const STORAGE_KEY = '@health_app/reminders';
-const CHANNEL_ID = 'reminders';
+// Android cannot raise a channel's importance after it was created, so this is a new id.
+// HIGH = the reminder shows in the status bar and pops up as a banner.
+const CHANNEL_ID = 'reminders_v2';
 const SUPPORTED = NOTIFICATIONS_AVAILABLE; // false in Expo Go: the reminders then do nothing
 
 // Show a reminder as a banner even while the app is open.
@@ -115,7 +117,7 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
         if (Platform.OS === 'android') {
           await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
             name: t('reminders.title'),
-            importance: Notifications.AndroidImportance.DEFAULT,
+            importance: Notifications.AndroidImportance.HIGH,
           });
         }
         const title = t('reminders.notif.title');

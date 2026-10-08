@@ -1,8 +1,9 @@
 import React from 'react';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import BottomTabNavigator from './BottomTabNavigator';
+import BottomTabNavigator, { TabParamList } from './BottomTabNavigator';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
@@ -16,7 +17,7 @@ export type RootStackParamList = {
   Register: undefined;
   SignIn: undefined;
   Onboarding: undefined;
-  Main: undefined;
+  Main: NavigatorScreenParams<TabParamList> | undefined;
   Chat: undefined;
 };
 
