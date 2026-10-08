@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the calendar screen and for logging a past day. */
-export const calendarTexts: Record<LanguageCode, Record<string, string>> = {
+export const calendarTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'log.flowTitleDay': 'Flow on this day',
     'log.symptomsTitleDay': 'Symptoms on this day',

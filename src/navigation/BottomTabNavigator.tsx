@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HomeScreen from '../screens/main/HomeScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
 import CalendarScreen from '../screens/main/CalendarScreen';
@@ -35,6 +35,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 export default function BottomTabNavigator() {
   const { t } = useI18n();
   const { unread } = useInbox();
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -46,7 +47,11 @@ export default function BottomTabNavigator() {
         tabBarStyle: {
           backgroundColor: colors.white,
           borderTopWidth: 0,
+                    // Explicit height + bottom padding so the labels are never hidden under the
+          // Android navigation bar (3 buttons or gesture bar).
+          height: 62 + insets.bottom,
           paddingTop: 6,
+          paddingBottom: insets.bottom + 6,
           elevation: 12,
           shadowColor: colors.text,
           shadowOpacity: 0.08,

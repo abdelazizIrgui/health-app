@@ -21,7 +21,7 @@ const DICTIONARIES: Record<LanguageCode, Dictionary> = {
   es: { ...es, ...cycleTexts.es, ...extraTexts.es },
   de: { ...de, ...cycleTexts.de, ...extraTexts.de },
   pt: { ...pt, ...cycleTexts.pt, ...extraTexts.pt },
-   zh, // Chinese and Russian keep all their texts in one file each
+  zh, // Chinese and Russian keep all their texts in one file each (zh.ts / ru.ts)
   ru,
 };
 const STORAGE_KEY = '@health_app/language';
@@ -63,7 +63,6 @@ function detectDeviceLanguage(): LanguageCode {
   return DEFAULT_LANGUAGE;
 }
 
-/** Which plural form a number needs (Arabic has four forms, most others two). */
 /**
  * Which plural form a number needs.
  * Arabic has four forms, Russian has one/few/many, Chinese has only one form, most others two.

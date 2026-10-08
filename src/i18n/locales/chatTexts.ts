@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the chat assistant. */
-export const chatTexts: Record<LanguageCode, Record<string, string>> = {
+export const chatTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'chat.open': 'Ask the assistant',
     'chat.title': 'Cycle assistant',

@@ -1,10 +1,10 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /**
  * Texts for the doctor's PDF report. Labels that already exist for the Insights screen
  * (insights.*), the symptoms / moods (log.*) and the health notes (alerts.*) are reused.
  */
-export const reportTexts: Record<LanguageCode, Record<string, string>> = {
+export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'settings.privacy': 'Privacy policy',
     'settings.report': 'Report for my doctor',

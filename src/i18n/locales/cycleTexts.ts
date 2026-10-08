@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for logging periods and predictions (merged into the main dictionaries). */
-export const cycleTexts: Record<LanguageCode, Record<string, string>> = {
+export const cycleTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'cycle.startToday': 'My period started today',
     'cycle.endToday': 'My period ended today',

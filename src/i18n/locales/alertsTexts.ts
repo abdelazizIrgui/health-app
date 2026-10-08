@@ -1,10 +1,10 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /**
  * Gentle health notes. They are general information, never a diagnosis.
  * 'alerts.longPeriod' has plural forms because its number is 8 or more (Arabic: .few / .other).
  */
-export const alertsTexts: Record<LanguageCode, Record<string, string>> = {
+export const alertsTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'alerts.title': 'A note for you',
     'alerts.shortCycle':

@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the daily log (flow, symptoms, mood). Merged into the main dictionaries. */
-export const logTexts: Record<LanguageCode, Record<string, string>> = {
+export const logTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'log.flowTitle': 'How is your flow today?',
     'log.symptomsTitle': 'Any symptoms today?',

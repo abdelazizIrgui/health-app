@@ -1,4 +1,4 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 import { accountTexts } from './accountTexts';
 import { alertsTexts } from './alertsTexts';
 import { backupTexts } from './backupTexts';
@@ -12,12 +12,13 @@ import { reportTexts } from './reportTexts';
 import { inboxTexts } from './inboxTexts';
 import { countryTexts } from './countryTexts';
 import { profileTexts } from './profileTexts';
+import { startDateTexts } from './startDateTexts';
 
 /**
  * All the extra translation files in one place.
  * When you add a new texts file, add one line per language here.
  */
-export const extraTexts: Record<LanguageCode, Record<string, string>> = {
+export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     ...logTexts.en,
     ...calendarTexts.en,
@@ -32,6 +33,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.en,
     ...inboxTexts.en,
     ...chatTexts.en,
+    ...startDateTexts.en,
     
   },
   ar: {
@@ -48,6 +50,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.ar,
     ...inboxTexts.ar,
     ...chatTexts.ar,
+    ...startDateTexts.ar,
   },
   fr: {
     ...logTexts.fr,
@@ -63,6 +66,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.fr,
     ...inboxTexts.fr,
     ...chatTexts.fr,
+    ...startDateTexts.fr,
   },
   es: {
     ...logTexts.es,
@@ -78,6 +82,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.es,
     ...inboxTexts.es,
     ...chatTexts.es,
+    ...startDateTexts.es,
   },
   de: {
     ...logTexts.de,
@@ -93,6 +98,7 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.de,
     ...inboxTexts.de,
     ...chatTexts.de,
+    ...startDateTexts.de,
   },
   pt: {
     ...logTexts.pt,
@@ -108,5 +114,6 @@ export const extraTexts: Record<LanguageCode, Record<string, string>> = {
     ...reportTexts.pt,
     ...inboxTexts.pt,
     ...chatTexts.pt,
+    ...startDateTexts.pt,
   },
 };

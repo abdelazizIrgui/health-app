@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for exporting a backup and restoring from it. */
-export const backupTexts: Record<LanguageCode, Record<string, string>> = {
+export const backupTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'settings.export': 'Export my data',
     'settings.exportTitle': 'Export your data?',

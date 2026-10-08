@@ -424,4 +424,11 @@ export const ru: Dictionary = {
   'chat.consent.shareCycle': 'Использовать день и фазу моего цикла для более точных ответов',
   'chat.consent.accept': 'Согласиться и продолжить',
   'chat.consent.decline': 'Не сейчас',
+    // ---- period started earlier ----
+  'cycle.startedEarlier': 'Месячные начались раньше',
+  'cycle.startedTitle': 'Когда начались твои месячные?',
+  'cycle.yesterday': 'Вчера',
+  'cycle.daysAgo.few': '{n} дня назад',
+  'cycle.daysAgo.many': '{n} дней назад',
+  'cycle.daysAgo.other': '{n} дней назад',
 };

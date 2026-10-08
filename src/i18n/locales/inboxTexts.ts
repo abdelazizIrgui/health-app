@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the notification inbox tab. */
-export const inboxTexts: Record<LanguageCode, Record<string, string>> = {
+export const inboxTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'tabs.inbox': 'Alerts',
     'inbox.title': 'Notifications',

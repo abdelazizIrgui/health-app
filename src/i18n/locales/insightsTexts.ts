@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the Insights screen. Plural texts use .one / .other (Arabic also .two / .few). */
-export const insightsTexts: Record<LanguageCode, Record<string, string>> = {
+export const insightsTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'insights.days.one': '{n} day',
     'insights.days.other': '{n} days',

@@ -1,10 +1,10 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /**
  * Texts for signing in/out and deleting data.
  * 'settings.signOutMessage' replaces the older text, which said the data would be deleted.
  */
-export const accountTexts: Record<LanguageCode, Record<string, string>> = {
+export const accountTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'account.welcomeBack': 'Welcome back, {name}!',
     'account.welcomeBackAnon': 'Welcome back!',

@@ -409,4 +409,9 @@ export const zh: Dictionary = {
   'chat.consent.shareCycle': '使用我的周期天数和阶段，给出更贴切的回答',
   'chat.consent.accept': '同意并继续',
   'chat.consent.decline': '暂不',
+  // ---- period started earlier ----
+  'cycle.startedEarlier': '我的经期之前就开始了',
+  'cycle.startedTitle': '你的经期是什么时候开始的？',
+  'cycle.yesterday': '昨天',
+  'cycle.daysAgo.other': '{n} 天前',
 };

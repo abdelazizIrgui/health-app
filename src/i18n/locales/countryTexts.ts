@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the country picker on the registration screen. */
-export const countryTexts: Record<LanguageCode, Record<string, string>> = {
+export const countryTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'register.country': 'Country',
     'register.searchCountry': 'Search country or code',

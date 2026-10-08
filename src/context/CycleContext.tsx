@@ -19,7 +19,10 @@ interface CycleContextValue {
   /** "My period ended" (today by default). */
   endPeriod: (date?: Date) => Promise<void>;
   /** Cancels what she logged today (a wrong tap). */
-    undoToday: () => Promise<void>;
+     /** Cancels what she logged today (a wrong tap). */
+  undoToday: () => Promise<void>;
+  /** Saves a period that already happened (start date, and end date if it is over). */
+  logPastPeriod: (start: Date, end?: Date) => Promise<void>;
   /** Replaces the periods and daily logs with the ones read from a backup. */
   restoreCycle: (periods: PeriodEntry[], logs: Record<string, DayLog>) => Promise<void>;
 
@@ -91,6 +94,16 @@ export function CycleProvider({ children }: { children: React.ReactNode }) {
     },
     [periods, save]
   );
+    const logPastPeriod = useCallback(
+    async (start: Date, end?: Date) => {
+      const s = toIsoDate(start);
+      const e = end ? toIsoDate(end) : undefined;
+      if (e && e < s) return;
+      if (periods.some((p) => p.start === s)) return;
+      await save([...periods, e ? { start: s, end: e } : { start: s }]);
+    },
+    [periods, save]
+  );
 
   const undoToday = useCallback(async () => {
     const iso = toIsoDate(new Date());
@@ -131,9 +144,19 @@ export function CycleProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const value = useMemo(
-    () => ({ periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday, restoreCycle }),
-    [periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday, restoreCycle]
+    const value = useMemo(
+    () => ({
+      periods,
+      logs,
+      saveLog,
+      loading,
+      startPeriod,
+      endPeriod,
+      undoToday,
+      logPastPeriod,
+      restoreCycle,
+    }),
+    [periods, logs, saveLog, loading, startPeriod, endPeriod, undoToday, logPastPeriod, restoreCycle]
   );
   return <CycleContext.Provider value={value}>{children}</CycleContext.Provider>;
 }

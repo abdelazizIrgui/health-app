@@ -1,4 +1,11 @@
-export type LanguageCode = 'en' | 'ar' | 'fr' | 'es' | 'de' | 'pt'|'zh'|'ru';
+export type LanguageCode = 'en' | 'ar' | 'fr' | 'es' | 'de' | 'pt' | 'zh' | 'ru';
+
+/**
+ * Languages whose texts are split across several small files (cycleTexts, logTexts, ...).
+ * Chinese and Russian keep ALL their texts in one file each (zh.ts / ru.ts),
+ * so they do not appear in the small files.
+ */
+export type SplitLanguageCode = Exclude<LanguageCode, 'zh' | 'ru'>;
 
 export interface Language {
   code: LanguageCode;

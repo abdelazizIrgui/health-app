@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the app lock (PIN and fingerprint / face). */
-export const lockTexts: Record<LanguageCode, Record<string, string>> = {
+export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'lock.pinRow': 'Lock with a PIN',
     'lock.pinHint': 'Ask for a 4-digit PIN every time you open the app.',

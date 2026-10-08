@@ -15,7 +15,9 @@ import type { RootStackParamList } from '../../navigation/RootNavigator';
 import { cardShadow, colors } from '../../theme';
 import { getCycleProfile } from '../../utils/cycleFromAnswers';
 import { buildForecast, toIsoDate } from '../../utils/forecast';
-
+import StartDateSheet from '../../components/StartDateSheet';
+// ...
+import {  fromIsoDate } from '../../utils/forecast';
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
 const QUICK_ACTIONS: { id: LogKind; labelKey: string; icon: IconName }[] = [
@@ -26,8 +28,9 @@ const QUICK_ACTIONS: { id: LogKind; labelKey: string; icon: IconName }[] = [
 
 export default function HomeScreen() {
   const { user, answers } = useUser();
-  const { periods, logs, startPeriod, endPeriod, undoToday } = useCycle();
+    const { periods, logs, startPeriod, endPeriod, undoToday, logPastPeriod } = useCycle();
   const [logKind, setLogKind] = useState<LogKind | null>(null);
+  const [startSheet, setStartSheet] = useState(false);
   const { t, dir, isRTL, formatDate } = useI18n();
 const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const text = { textAlign: dir.align, writingDirection: dir.writing } as const;
@@ -46,13 +49,28 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
   const lastLogged = periods[periods.length - 1];
   const canUndo = !!lastLogged && (lastLogged.start === todayIso || lastLogged.end === todayIso);
 
+  // She installed the app in the middle of a period: it comes from the questionnaire only
+  // (nothing logged yet), so we still let her mark the end.
+  const seedOnly = !paused && !!forecast && forecast.onPeriod && periods.length === 0;
+
   // One big button: "started today" or, while a period is open, "ended today".
-  const showMainButton = !paused && (!forecast || !forecast.onPeriod || forecast.openPeriod);
-  const mainIsEnd = !!forecast && forecast.openPeriod;
+  const showMainButton =
+    !paused && (!forecast || !forecast.onPeriod || forecast.openPeriod || seedOnly);
+  const mainIsEnd = (!!forecast && forecast.openPeriod) || seedOnly;
   const onMainPress = () => {
-    if (mainIsEnd) endPeriod();
+    if (seedOnly && profile.ready) logPastPeriod(profile.settings.lastPeriodStart, new Date());
+    else if (mainIsEnd) endPeriod();
     else startPeriod();
   };
+
+  // "My period started earlier": only days after the last logged period began.
+  const earliestStart = lastLogged
+    ? new Date(
+        fromIsoDate(lastLogged.start).getFullYear(),
+        fromIsoDate(lastLogged.start).getMonth(),
+        fromIsoDate(lastLogged.start).getDate() + 1
+      )
+    : undefined;
 
   // A filled circle on a quick-log button means something is already logged today.
   const todayLog = logs[todayIso];
@@ -156,6 +174,17 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
             </Text>
           </TouchableOpacity>
         )}
+                {showMainButton && !mainIsEnd && (
+          <TouchableOpacity
+            style={styles.undo}
+            accessibilityRole="button"
+            accessibilityLabel={t('cycle.startedEarlier')}
+            onPress={() => setStartSheet(true)}
+          >
+            <Text style={styles.undoText}>{t('cycle.startedEarlier')}</Text>
+          </TouchableOpacity>
+        )}
+
         {canUndo && !paused && (
           <TouchableOpacity
             style={styles.undo}
@@ -228,7 +257,18 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
         <Text style={[styles.disclaimer, text]}>{t('cycle.disclaimer')}</Text>
       </ScrollView>
 
-      <LogSheet kind={logKind} onClose={() => setLogKind(null)} />
+      <LogSheet kind={logKind} onClose={() => setLogKind(null)} 
+        
+        />
+              <StartDateSheet
+        visible={startSheet}
+        earliest={earliestStart}
+        onClose={() => setStartSheet(false)}
+        onSelect={(date) => {
+          setStartSheet(false);
+          startPeriod(date);
+        }}
+      />
     </SafeAreaView>
   );
 }

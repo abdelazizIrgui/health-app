@@ -1,7 +1,7 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /** Texts for the profile photo and the "My profile" sheet. */
-export const profileTexts: Record<LanguageCode, Record<string, string>> = {
+export const profileTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'settings.myProfile': 'My profile',
     'profile.addPhoto': 'Add a photo',

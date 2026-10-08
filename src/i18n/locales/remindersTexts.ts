@@ -1,10 +1,10 @@
-import type { LanguageCode } from '../languages';
+import type { SplitLanguageCode } from '../languages';
 
 /**
  * Texts for the reminders (Settings sheet and the notifications themselves).
  * The notification texts are discreet on purpose: nothing sensitive shows on a lock screen.
  */
-export const remindersTexts: Record<LanguageCode, Record<string, string>> = {
+export const remindersTexts: Record<SplitLanguageCode, Record<string, string>> = {
   en: {
     'settings.reminders': 'Reminders',
     'reminders.title': 'Reminders',
