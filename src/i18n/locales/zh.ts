@@ -414,4 +414,9 @@ export const zh: Dictionary = {
   'cycle.startedTitle': '你的经期是什么时候开始的？',
   'cycle.yesterday': '昨天',
   'cycle.daysAgo.other': '{n} 天前',
+    // ---- optional registration details ----
+  'registration.consent':
+    '我同意把我的姓名、电子邮箱、手机号码和出生年份发送到应用的服务器，以便开发者就应用事宜联系我（支持和重要更新）。',
+  'registration.hint':
+    '可选。你的健康数据（经期、症状、情绪）绝不会被发送。你可以随时通过“删除我的所有数据”删除这些信息。',
 };

@@ -10,6 +10,7 @@ import { logTexts } from './logTexts';
 import { remindersTexts } from './remindersTexts';
 import { reportTexts } from './reportTexts';
 import { inboxTexts } from './inboxTexts';
+import { registrationTexts } from './registrationTexts';
 import { countryTexts } from './countryTexts';
 import { profileTexts } from './profileTexts';
 import { startDateTexts } from './startDateTexts';
@@ -24,8 +25,8 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...calendarTexts.en,
     ...insightsTexts.en,
     ...accountTexts.en,
-    ...countryTexts.en, 
-    ...profileTexts.en,  
+    ...countryTexts.en,
+    ...profileTexts.en,
     ...alertsTexts.en,
     ...backupTexts.en,
     ...lockTexts.en,
@@ -33,16 +34,16 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.en,
     ...inboxTexts.en,
     ...chatTexts.en,
+    ...registrationTexts.en,
     ...startDateTexts.en,
-    
   },
   ar: {
     ...logTexts.ar,
     ...calendarTexts.ar,
     ...insightsTexts.ar,
     ...accountTexts.ar,
-    ...countryTexts.ar, 
-    ...profileTexts.ar,  
+    ...countryTexts.ar,
+    ...profileTexts.ar,
     ...alertsTexts.ar,
     ...backupTexts.ar,
     ...lockTexts.ar,
@@ -50,6 +51,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.ar,
     ...inboxTexts.ar,
     ...chatTexts.ar,
+    ...registrationTexts.ar,
     ...startDateTexts.ar,
   },
   fr: {
@@ -66,6 +68,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.fr,
     ...inboxTexts.fr,
     ...chatTexts.fr,
+    ...registrationTexts.fr,
     ...startDateTexts.fr,
   },
   es: {
@@ -82,6 +85,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.es,
     ...inboxTexts.es,
     ...chatTexts.es,
+    ...registrationTexts.es,
     ...startDateTexts.es,
   },
   de: {
@@ -89,8 +93,8 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...calendarTexts.de,
     ...insightsTexts.de,
     ...accountTexts.de,
-    ...countryTexts.de, 
-    ...profileTexts.de,  
+    ...countryTexts.de,
+    ...profileTexts.de,
     ...alertsTexts.de,
     ...backupTexts.de,
     ...lockTexts.de,
@@ -98,6 +102,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.de,
     ...inboxTexts.de,
     ...chatTexts.de,
+    ...registrationTexts.de,
     ...startDateTexts.de,
   },
   pt: {
@@ -106,7 +111,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...insightsTexts.pt,
     ...accountTexts.pt,
     ...countryTexts.pt,
-    ...profileTexts.pt,   
+    ...profileTexts.pt,
     ...alertsTexts.pt,
     ...backupTexts.pt,
     ...lockTexts.pt,
@@ -114,6 +119,7 @@ export const extraTexts: Record<SplitLanguageCode, Record<string, string>> = {
     ...reportTexts.pt,
     ...inboxTexts.pt,
     ...chatTexts.pt,
+    ...registrationTexts.pt,
     ...startDateTexts.pt,
   },
 };

@@ -10,4 +10,12 @@
  */
 export const PRIVACY_POLICY_URL = '';
 
-export const CHAT_API_URL = 'https://health-chat.yyut7773.workers.dev';
+export const CHAT_API_URL = 'https://health-chat.yyut7773.workers.dev/chat';
+
+/**
+ * REGISTRATION_API_URL: the address of your Worker WITHOUT /chat at the end, for example
+ * "https://health-chat.yourname.workers.dev". When it is not empty, the Register screen shows an
+ * optional box; only if she ticks it, her name, email, phone and YEAR of birth are saved on your
+ * server (see worker/schema.sql). Leave it empty to keep everything on the phone.
+ */
+export const REGISTRATION_API_URL = 'https://health-chat.yyut7773.workers.dev';
