@@ -2,6 +2,10 @@ export interface CycleSettings {
   lastPeriodStart: Date;
   cycleLength: number; // days, e.g. 28
   periodLength: number; // days, e.g. 5
+  /** How many days the period can come earlier or later (from the questionnaire). */
+  spreadDays?: number;
+  /** True with hormonal contraception: ovulation is not predictable, so no fertile window. */
+  noFertileWindow?: boolean;
 }
 
 export type CyclePhase = 'menstrual' | 'follicular' | 'fertile' | 'luteal';

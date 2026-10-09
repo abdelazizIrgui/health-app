@@ -85,6 +85,9 @@ export function buildMarks(
 
     for (let i = 0; i < forecast.periodLength; i++) markFuture(addDays(start, i), 'predicted');
 
+    // Hormonal contraception: no fertile window is shown.
+    if (forecast.noFertile) continue;
+
     const ovulation = addDays(start, -LUTEAL_DAYS);
     for (let i = -5; i <= 1; i++) markFuture(addDays(ovulation, i), 'fertile');
   }
