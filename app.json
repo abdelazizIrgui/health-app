@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "Health Tracker",
-    "slug": "health-tracker",
+    "name": "Rosy",
+    "slug": "rosy",
     "version": "1.0.0",
-    "scheme": "healthtracker",
+    "scheme": "rosy",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "description": "A private period tracker. Your data stays on your phone.",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.abdelazizirgui.healthtracker",
+      "bundleIdentifier": "com.abdelazizirgui.rosy",
       "buildNumber": "1",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.abdelazizirgui.healthtracker",
+      "package": "com.abdelazizirgui.rosy",
       "versionCode": 1,
       "allowBackup": false,
       "adaptiveIcon": {
@@ -26,7 +26,12 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,10 +39,10 @@
     "plugins": [
       "@react-native-community/datetimepicker",
       "expo-secure-store",
-            [
+      [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Health Tracker to access your photos to set a profile picture."
+          "photosPermission": "Allow Rosy to access your photos to set a profile picture."
         }
       ],
       [
@@ -60,9 +65,15 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Allow Health Tracker to use Face ID to unlock the app."
+          "faceIDPermission": "Allow Rosy to use Face ID to unlock the app."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "28ec753f-677c-4f05-99e7-788522149c7f"
+      }
+    },
+    "owner": "abdelazizirgui"
   }
 }

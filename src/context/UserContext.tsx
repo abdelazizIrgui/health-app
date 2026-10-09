@@ -40,10 +40,10 @@ interface UserContextValue {
   restoreUser: (profile: UserProfile, answers: Answers, onboardingDone: boolean) => Promise<void>;
 }
 
-const STORAGE_KEY = '@health_app/user_profile';
-const ANSWERS_KEY = '@health_app/answers';
-const DONE_KEY = '@health_app/onboarding_done';
-const SIGNED_IN_KEY = '@health_app/signed_in';
+const STORAGE_KEY = '@rosy/user_profile';
+const ANSWERS_KEY = '@rosy/answers';
+const DONE_KEY = '@rosy/onboarding_done';
+const SIGNED_IN_KEY = '@rosy/signed_in';
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
 
@@ -144,7 +144,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       ANSWERS_KEY,
       DONE_KEY,
       SIGNED_IN_KEY,
-      '@health_app/chat_consent', // the chat agreement goes with the rest of her data
+      '@rosy/chat_consent', // the chat agreement goes with the rest of her data
     ]);
     setUser(null);
     setAnswers({});

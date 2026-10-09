@@ -1,4 +1,4 @@
-# Health Tracker
+# Rosy
 
 Period (menstrual cycle) tracking app built with Expo, React Native and TypeScript.
 All data stays on the device. There is no server, no analytics and no account is sent anywhere.
@@ -112,8 +112,8 @@ The same checks run on GitHub for every push (`.github/workflows/ci.yml`).
 
 ## Publishing
 
-1. In `app.json` change `ios.bundleIdentifier` and `android.package` from `com.changeme.healthtracker`
-   to your own id (for example `com.yourname.healthtracker`). It cannot be changed after the first release.
+1. In `app.json` change `ios.bundleIdentifier` and `android.package` from `com.changeme.rosy`
+   to your own id (for example `com.yourname.rosy`). It cannot be changed after the first release.
 2. Publish `docs/PRIVACY_POLICY.md` on a public web page (for example GitHub Pages), add your contact email
    in it, and put the address in `PRIVACY_POLICY_URL` in `src/config.ts`.
 3. Build with EAS:

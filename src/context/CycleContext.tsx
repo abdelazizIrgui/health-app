@@ -28,8 +28,8 @@ interface CycleContextValue {
 
 }
 
-const PERIODS_KEY = '@health_app/periods';
-const LOGS_KEY = '@health_app/day_logs';
+const PERIODS_KEY = '@rosy/periods';
+const LOGS_KEY = '@rosy/day_logs';
 
 const CycleContext = createContext<CycleContextValue | undefined>(undefined);
 

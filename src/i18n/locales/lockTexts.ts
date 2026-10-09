@@ -21,7 +21,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       'A forgotten PIN cannot be recovered. You can erase all the data on this device and start again. If you saved a backup, you can restore it afterwards.',
     'lock.forgotConfirm': 'Erase everything',
-    'lock.biometricPrompt': 'Unlock Health Tracker',
+    'lock.biometricPrompt': 'Unlock Rosy',
     'lock.useBiometric': 'Use fingerprint or face',
     'lock.erase': 'Delete the last digit',
   },
@@ -44,7 +44,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       'لا يمكن استرجاع الرقم السري المنسي. يمكنك مسح كل البيانات على هذا الجهاز والبدء من جديد. وإن كانت لديك نسخة احتياطية فيمكنك استعادتها بعد ذلك.',
     'lock.forgotConfirm': 'مسح كل شيء',
-    'lock.biometricPrompt': 'فتح Health Tracker',
+    'lock.biometricPrompt': 'فتح Rosy',
     'lock.useBiometric': 'استخدام البصمة أو الوجه',
     'lock.erase': 'حذف آخر رقم',
   },
@@ -68,7 +68,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       "Un code PIN oublié ne peut pas être récupéré. Vous pouvez effacer toutes les données de cet appareil et recommencer. Si vous avez fait une sauvegarde, vous pourrez la restaurer ensuite.",
     'lock.forgotConfirm': 'Tout effacer',
-    'lock.biometricPrompt': 'Déverrouiller Health Tracker',
+    'lock.biometricPrompt': 'Déverrouiller Rosy',
     'lock.useBiometric': "Utiliser l'empreinte ou le visage",
     'lock.erase': 'Effacer le dernier chiffre',
   },
@@ -91,7 +91,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       'Un PIN olvidado no se puede recuperar. Puedes borrar todos los datos de este dispositivo y empezar de nuevo. Si guardaste una copia de seguridad, podrás restaurarla después.',
     'lock.forgotConfirm': 'Borrar todo',
-    'lock.biometricPrompt': 'Desbloquear Health Tracker',
+    'lock.biometricPrompt': 'Desbloquear Rosy',
     'lock.useBiometric': 'Usar huella o rostro',
     'lock.erase': 'Borrar el último dígito',
   },
@@ -115,7 +115,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       'Eine vergessene PIN kann nicht wiederhergestellt werden. Du kannst alle Daten auf diesem Gerät löschen und neu beginnen. Wenn du ein Backup gespeichert hast, kannst du es danach wiederherstellen.',
     'lock.forgotConfirm': 'Alles löschen',
-    'lock.biometricPrompt': 'Health Tracker entsperren',
+    'lock.biometricPrompt': 'Rosy entsperren',
     'lock.useBiometric': 'Fingerabdruck oder Gesicht verwenden',
     'lock.erase': 'Letzte Ziffer löschen',
   },
@@ -138,7 +138,7 @@ export const lockTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'lock.forgotMessage':
       'Um PIN esquecido não pode ser recuperado. Pode apagar todos os dados deste dispositivo e começar de novo. Se guardou uma cópia de segurança, pode restaurá-la depois.',
     'lock.forgotConfirm': 'Apagar tudo',
-    'lock.biometricPrompt': 'Desbloquear Health Tracker',
+    'lock.biometricPrompt': 'Desbloquear Rosy',
     'lock.useBiometric': 'Usar impressão digital ou rosto',
     'lock.erase': 'Apagar o último dígito',
   },

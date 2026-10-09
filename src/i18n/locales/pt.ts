@@ -178,9 +178,7 @@ export const pt: Dictionary = {
   'q.goal.o.symptoms': 'Perceber os meus sintomas e o meu humor',
   'q.goal.o.conceive': 'Planear uma gravidez',
 
-  'q.ramadan.title': 'Queres acompanhar os dias do Ramadão e o calendário Hégira?',
-  'q.ramadan.o.yes': 'Sim',
-  'q.ramadan.o.no': 'Não',
+
 
   'q.reminders.title': 'Como preferes os lembretes?',
   'q.reminders.o.neutral': 'Com texto neutro (como "Lembrete")',

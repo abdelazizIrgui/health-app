@@ -26,7 +26,7 @@ const DICTIONARIES: Record<LanguageCode, Dictionary> = {
   zh: { ...zh, ...personalTexts.zh },
   ru: { ...ru, ...personalTexts.ru },
 };
-const STORAGE_KEY = '@health_app/language';
+const STORAGE_KEY = '@rosy/language';
 
 type Params = Record<string, string | number>;
 

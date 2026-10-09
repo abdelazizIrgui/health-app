@@ -173,9 +173,7 @@ export const ru: Dictionary = {
   'q.goal.o.track': 'Просто знать, когда придут месячные',
   'q.goal.o.symptoms': 'Понимать свои симптомы и настроение',
   'q.goal.o.conceive': 'Планировать беременность',
-  'q.ramadan.title': 'Хочешь отслеживать дни Рамадана и календарь хиджры?',
-  'q.ramadan.o.yes': 'Да',
-  'q.ramadan.o.no': 'Нет',
+
   'q.reminders.title': 'Как ты хочешь получать напоминания?',
   'q.reminders.o.neutral': 'Нейтральным текстом (например, «Напоминание»)',
   'q.reminders.o.clear': 'Понятным текстом',
@@ -308,7 +306,7 @@ export const ru: Dictionary = {
   'settings.exportMessage': 'Резервная копия содержит твой профиль и данные о здоровье в виде обычного текста. Сохрани её там, куда есть доступ только у тебя.',
   'settings.exportConfirm': 'Экспортировать',
   'settings.restore': 'Восстановить из резервной копии',
-  'backup.shareTitle': 'Резервная копия Health Tracker',
+  'backup.shareTitle': 'Резервная копия Rosy',
   'restore.title': 'Восстановление из копии',
   'restore.hint': 'Вставь текст резервной копии, который ты сохранила ранее, и нажми «Восстановить».',
   'restore.placeholder': 'Вставь резервную копию сюда',
@@ -337,7 +335,7 @@ export const ru: Dictionary = {
   'lock.forgotTitle': 'Стереть всё?',
   'lock.forgotMessage': 'Забытый PIN-код восстановить нельзя. Ты можешь стереть все данные на этом устройстве и начать заново. Если у тебя есть резервная копия, потом её можно восстановить.',
   'lock.forgotConfirm': 'Стереть всё',
-  'lock.biometricPrompt': 'Разблокировать Health Tracker',
+  'lock.biometricPrompt': 'Разблокировать Rosy',
   'lock.useBiometric': 'Использовать отпечаток пальца или лицо',
   'lock.erase': 'Удалить последнюю цифру',
 
@@ -356,9 +354,9 @@ export const ru: Dictionary = {
   'reminders.time': 'Время',
   'reminders.discreet': 'Тексты напоминаний нейтральные, поэтому на экране блокировки не отображается ничего личного.',
   'reminders.deniedTitle': 'Уведомления отключены',
-  'reminders.deniedMessage': 'Чтобы получать напоминания, разреши уведомления для Health Tracker в настройках телефона.',
+  'reminders.deniedMessage': 'Чтобы получать напоминания, разреши уведомления для Rosy в настройках телефона.',
   'reminders.openSettings': 'Открыть настройки',
-  'reminders.notif.title': 'Health Tracker',
+  'reminders.notif.title': 'Rosy',
   'reminders.notif.period': 'Мягкое напоминание: загляни в свой календарь.',
   'reminders.notif.daily': 'Как прошёл твой день? Удели минутку, чтобы отметить.',
 
@@ -388,7 +386,7 @@ export const ru: Dictionary = {
   'report.notes': 'Заметки о здоровье',
   'report.noNotes': 'Сейчас заметок о здоровье нет.',
   'report.disclaimer': 'Этот отчёт составлен только на основе записей в приложении. Прогнозы являются оценкой. Это общая информация, а не диагноз и не медицинский совет.',
-  'report.footer': 'Создано в Health Tracker',
+  'report.footer': 'Создано в Rosy',
 
   // ---- inbox ----
   'tabs.inbox': 'Уведомления',

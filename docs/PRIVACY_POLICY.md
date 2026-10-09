@@ -1,8 +1,8 @@
-# Privacy Policy — Health Tracker
+# Privacy Policy — Rosy
 
 _Last updated: 6 October 2026_
 
-Health Tracker is a private period (menstrual cycle) tracker. This page explains what the app does with your information. The short version: **your health data stays on your phone**, except for the optional chat assistant, which is explained below.
+Rosy is a private period (menstrual cycle) tracker. This page explains what the app does with your information. The short version: **your health data stays on your phone**, except for the optional chat assistant, which is explained below.
 
 ## What the app stores
 

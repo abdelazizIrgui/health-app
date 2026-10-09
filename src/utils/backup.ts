@@ -5,7 +5,7 @@ import type { PeriodEntry } from './forecast';
 
 /** Everything that is saved on the device, in one piece of text she can keep. */
 export interface Backup {
-  app: 'health-app';
+  app: 'rosy';
   version: 1;
   exportedAt: string; // ISO date-time
   user: UserProfile;
@@ -15,7 +15,7 @@ export interface Backup {
   logs: Record<string, DayLog>;
 }
 
-const APP_ID = 'health-app';
+const APP_ID = 'rosy';
 const VERSION = 1;
 const MAX_LENGTH = 2_000_000; // far more than years of daily logs
 const ISO_PATTERN = /^\d{4}-\d{2}-\d{2}$/;

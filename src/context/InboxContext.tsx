@@ -29,7 +29,7 @@ import { useCycle } from './CycleContext';
 import { useReminders } from './ReminderContext';
 import { useUser } from './UserContext';
 
-const STORAGE_KEY = '@health_app/inbox';
+const STORAGE_KEY = '@rosy/inbox';
 
 interface InboxContextValue {
   /** Messages that reached her as notifications, newest first. */

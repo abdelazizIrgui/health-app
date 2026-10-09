@@ -179,9 +179,7 @@ export const de: Dictionary = {
   'q.goal.o.symptoms': 'Meine Symptome und Stimmung verstehen',
   'q.goal.o.conceive': 'Eine Schwangerschaft planen',
 
-  'q.ramadan.title': 'Möchtest du Ramadan-Tage und den Hidschri-Kalender verfolgen?',
-  'q.ramadan.o.yes': 'Ja',
-  'q.ramadan.o.no': 'Nein',
+
 
   'q.reminders.title': 'Wie möchtest du Erinnerungen erhalten?',
   'q.reminders.o.neutral': 'Mit neutralem Text (z. B. „Erinnerung“)',

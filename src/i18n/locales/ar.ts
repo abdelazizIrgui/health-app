@@ -177,9 +177,7 @@ export const ar: Dictionary = {
   'q.goal.o.symptoms': 'فهم أعراضي ومزاجي',
   'q.goal.o.conceive': 'التخطيط للحمل',
 
-  'q.ramadan.title': 'هل تريدين تتبّع أيام رمضان والتقويم الهجري؟',
-  'q.ramadan.o.yes': 'نعم',
-  'q.ramadan.o.no': 'لا',
+  
 
   'q.reminders.title': 'كيف تفضّلين التذكيرات؟',
   'q.reminders.o.neutral': 'بنص عام محايد (مثل: "تذكير")',

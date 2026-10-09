@@ -189,9 +189,7 @@ export const en = {
   'q.goal.o.symptoms': 'Understand my symptoms and mood',
   'q.goal.o.conceive': 'Plan a pregnancy',
 
-  'q.ramadan.title': 'Do you want to track Ramadan days and the Hijri calendar?',
-  'q.ramadan.o.yes': 'Yes',
-  'q.ramadan.o.no': 'No',
+ 
 
   'q.reminders.title': 'How would you like reminders?',
   'q.reminders.o.neutral': 'With a neutral text (like "Reminder")',

@@ -26,7 +26,7 @@ import { requestReply } from '../../utils/chatApi';
 import { getCycleProfile } from '../../utils/cycleFromAnswers';
 import { buildForecast } from '../../utils/forecast';
 
-const CONSENT_KEY = '@health_app/chat_consent';
+const CONSENT_KEY = '@rosy/chat_consent';
 const SUGGESTIONS = ['chat.suggest.1', 'chat.suggest.2', 'chat.suggest.3', 'chat.suggest.4'];
 
 interface Consent {

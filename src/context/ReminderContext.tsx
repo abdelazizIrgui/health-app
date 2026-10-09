@@ -23,7 +23,7 @@ import {
 import { useCycle } from './CycleContext';
 import { useUser } from './UserContext';
 
-const STORAGE_KEY = '@health_app/reminders';
+const STORAGE_KEY = '@rosy/reminders';
 // Android cannot raise a channel's importance after it was created, so this is a new id.
 // HIGH = the reminder shows in the status bar and pops up as a banner.
 const CHANNEL_ID = 'reminders_v2';

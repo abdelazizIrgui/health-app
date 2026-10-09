@@ -168,9 +168,7 @@ export const zh: Dictionary = {
   'q.goal.o.track': '只想知道月经什么时候来',
   'q.goal.o.symptoms': '了解我的症状和情绪',
   'q.goal.o.conceive': '计划怀孕',
-  'q.ramadan.title': '你想记录斋月日期和伊斯兰历吗？',
-  'q.ramadan.o.yes': '想',
-  'q.ramadan.o.no': '不想',
+
   'q.reminders.title': '你希望如何收到提醒？',
   'q.reminders.o.neutral': '使用中性文字（例如“提醒”）',
   'q.reminders.o.clear': '使用清楚的文字',

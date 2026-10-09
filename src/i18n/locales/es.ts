@@ -178,10 +178,6 @@ export const es: Dictionary = {
   'q.goal.o.symptoms': 'Entender mis síntomas y mi ánimo',
   'q.goal.o.conceive': 'Planificar un embarazo',
 
-  'q.ramadan.title': '¿Quieres seguir los días de Ramadán y el calendario hegiriano?',
-  'q.ramadan.o.yes': 'Sí',
-  'q.ramadan.o.no': 'No',
-
   'q.reminders.title': '¿Cómo prefieres los recordatorios?',
   'q.reminders.o.neutral': 'Con un texto neutro (como «Recordatorio»)',
   'q.reminders.o.clear': 'Con un texto claro',

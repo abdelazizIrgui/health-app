@@ -23,7 +23,7 @@ import {
 } from '../utils/pinLock';
 import { useUser } from './UserContext';
 
-const LOCK_KEY = 'health_app_lock';
+const LOCK_KEY = 'rosy_app_lock';
 const GRACE_MS = 10_000; // leaving the app for less than this does not lock it again
 
 /** What is kept in the phone's secure storage. The PIN itself is never stored, only a hash. */

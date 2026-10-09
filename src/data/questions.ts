@@ -210,14 +210,6 @@ export const QUESTIONS: Question[] = [
     visibleIf: started,
   },
   {
-    id: 'ramadan',
-    phase: 4,
-    type: 'single',
-    options: [{ value: 'yes' }, { value: 'no' }],
-    skippable: true,
-    visibleIf: started,
-  },
-  {
     id: 'reminders',
     phase: 4,
     type: 'single',

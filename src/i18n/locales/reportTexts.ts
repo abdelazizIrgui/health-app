@@ -33,7 +33,7 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'No health notes at the moment.',
     'report.disclaimer':
       'This report is made only from what was logged in the app. Predictions are estimates. It is general information, not a diagnosis or medical advice.',
-    'report.footer': 'Created with Health Tracker',
+    'report.footer': 'Created with Rosy',
   },
   ar: {
     'settings.privacy': 'سياسة الخصوصية',
@@ -62,7 +62,7 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'لا توجد ملاحظات صحية حالياً.',
     'report.disclaimer':
       'أُنشئ هذا التقرير فقط مما سُجّل في التطبيق. التوقعات تقديرية. هو معلومات عامة وليس تشخيصاً ولا نصيحة طبية.',
-    'report.footer': 'أُنشئ بواسطة Health Tracker',
+    'report.footer': 'أُنشئ بواسطة Rosy',
   },
   fr: {
     'settings.privacy': 'Politique de confidentialité',
@@ -92,7 +92,7 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'Aucune note de santé pour le moment.',
     'report.disclaimer':
       "Ce rapport est établi uniquement à partir de ce qui a été noté dans l'application. Les prévisions sont des estimations. Ce sont des informations générales, pas un diagnostic ni un avis médical.",
-    'report.footer': 'Créé avec Health Tracker',
+    'report.footer': 'Créé avec Rosy',
   },
   es: {
     'settings.privacy': 'Política de privacidad',
@@ -122,7 +122,7 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'No hay notas de salud por ahora.',
     'report.disclaimer':
       'Este informe se basa solo en lo registrado en la app. Las previsiones son estimaciones. Es información general, no un diagnóstico ni consejo médico.',
-    'report.footer': 'Creado con Health Tracker',
+    'report.footer': 'Creado con Rosy',
   },
   de: {
     'settings.privacy': 'Datenschutzerklärung',
@@ -152,7 +152,7 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'Im Moment keine Gesundheitshinweise.',
     'report.disclaimer':
       'Dieser Bericht beruht nur auf den Einträgen in der App. Vorhersagen sind Schätzungen. Es sind allgemeine Informationen, keine Diagnose und kein medizinischer Rat.',
-    'report.footer': 'Erstellt mit Health Tracker',
+    'report.footer': 'Erstellt mit Rosy',
   },
   pt: {
     'settings.privacy': 'Política de privacidade',
@@ -182,6 +182,6 @@ export const reportTexts: Record<SplitLanguageCode, Record<string, string>> = {
     'report.noNotes': 'Sem notas de saúde de momento.',
     'report.disclaimer':
       'Este relatório baseia-se apenas no que foi registado na app. As previsões são estimativas. É informação geral, não um diagnóstico nem aconselhamento médico.',
-    'report.footer': 'Criado com Health Tracker',
+    'report.footer': 'Criado com Rosy',
   },
 };
