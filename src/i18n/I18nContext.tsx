@@ -13,16 +13,18 @@ import { ru } from './locales/ru';
 
 import { cycleTexts } from './locales/cycleTexts';
 import { extraTexts } from './locales/extraTexts';
+import { personalTexts } from './locales/personalTexts';
 
 const DICTIONARIES: Record<LanguageCode, Dictionary> = {
-  en: { ...en, ...cycleTexts.en, ...extraTexts.en },
-  ar: { ...ar, ...cycleTexts.ar, ...extraTexts.ar },
-  fr: { ...fr, ...cycleTexts.fr, ...extraTexts.fr },
-  es: { ...es, ...cycleTexts.es, ...extraTexts.es },
-  de: { ...de, ...cycleTexts.de, ...extraTexts.de },
-  pt: { ...pt, ...cycleTexts.pt, ...extraTexts.pt },
-  zh, // Chinese and Russian keep all their texts in one file each (zh.ts / ru.ts)
-  ru,
+  en: { ...en, ...cycleTexts.en, ...extraTexts.en, ...personalTexts.en },
+  ar: { ...ar, ...cycleTexts.ar, ...extraTexts.ar, ...personalTexts.ar },
+  fr: { ...fr, ...cycleTexts.fr, ...extraTexts.fr, ...personalTexts.fr },
+  es: { ...es, ...cycleTexts.es, ...extraTexts.es, ...personalTexts.es },
+  de: { ...de, ...cycleTexts.de, ...extraTexts.de, ...personalTexts.de },
+  pt: { ...pt, ...cycleTexts.pt, ...extraTexts.pt, ...personalTexts.pt },
+  // Chinese and Russian keep all their texts in one file each (zh.ts / ru.ts)
+  zh: { ...zh, ...personalTexts.zh },
+  ru: { ...ru, ...personalTexts.ru },
 };
 const STORAGE_KEY = '@health_app/language';
 

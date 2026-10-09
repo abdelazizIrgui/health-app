@@ -81,3 +81,40 @@ test('the questionnaire answer is the starting point when nothing is logged', ()
   assert.equal(f.cycleLength, 30);
   assert.equal(toIsoDate(f.nextStart), '2026-04-25');
 });
+
+test('questionnaire says rarely regular: a range from day one, not a single day', () => {
+  const f = buildForecast(
+    [],
+    { lastPeriodStart: day(2026, 3, 26), cycleLength: 30, periodLength: 5, spreadDays: 14 },
+    day(2026, 4, 5)
+  );
+  assert.ok(f);
+  assert.equal(f.irregular, true);
+  assert.equal(toIsoDate(f.earliestStart), '2026-04-18');
+  assert.equal(toIsoDate(f.latestStart), '2026-05-02');
+});
+
+test('one measured cycle is blended with the questionnaire answer', () => {
+  const f = buildForecast(
+    [{ start: '2026-03-21' }],
+    { lastPeriodStart: day(2026, 3, 1), cycleLength: 30, periodLength: 5 },
+    day(2026, 4, 1)
+  );
+  assert.ok(f);
+  assert.equal(f.cycleLength, 27); // (20 + 2 * 30) / 3
+  assert.equal(toIsoDate(f.nextStart), '2026-04-17');
+});
+
+test('hormonal contraception: the fertile phase never appears', () => {
+  const seed = {
+    lastPeriodStart: day(2026, 3, 1),
+    cycleLength: 28,
+    periodLength: 5,
+    noFertileWindow: true,
+  };
+  // Cycle day 13 is normally "fertile" for a 28-day cycle.
+  const f = buildForecast([], seed, day(2026, 3, 13));
+  assert.ok(f);
+  assert.equal(f.noFertile, true);
+  assert.notEqual(f.phase, 'fertile');
+});

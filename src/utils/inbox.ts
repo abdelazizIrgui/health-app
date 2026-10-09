@@ -25,7 +25,7 @@ export const MAX_BACKFILL_DAYS = 14;
 
 export const EMPTY_INBOX = (now: number): InboxState => ({ items: [], checkedAt: now });
 
-const isKind = (v: unknown): v is InboxKind => v === 'daily' || v === 'period';
+export const isKind = (v: unknown): v is InboxKind => v === 'daily' || v === 'period';
 
 /** Reads the saved text. Anything unexpected is dropped, item by item. */
 export function parseInbox(raw: string | null, now: number): InboxState {

@@ -16,6 +16,7 @@ import { cardShadow, colors } from '../../theme';
 import { getCycleProfile } from '../../utils/cycleFromAnswers';
 import { buildForecast, toIsoDate } from '../../utils/forecast';
 import StartDateSheet from '../../components/StartDateSheet';
+import { isPmsWindow, lateReasons, usualPmsSymptoms } from '../../utils/personal';
 // ...
 import {  fromIsoDate } from '../../utils/forecast';
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -38,6 +39,14 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
   const profile = getCycleProfile(answers);
   const paused = !profile.ready && profile.reason === 'pregnant';
   const forecast = paused ? null : buildForecast(periods, profile.ready ? profile.settings : null);
+
+  // Notes built from the questionnaire answers (see utils/personal.ts).
+  const lateList = lateReasons(answers)
+    .map((r) => t(`q.lifestyle.o.${r}`))
+    .join(' · ');
+  const pmsList = usualPmsSymptoms(answers)
+    .map((s) => t(`q.pmsSymptoms.o.${s}`))
+    .join(' · ');
 
   const firstName = user?.name.trim().split(' ')[0];
   const dateText = formatDate(new Date(), { weekday: 'long', month: 'long', day: 'numeric' });
@@ -211,7 +220,7 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
               </Text>
             </View>
 
-            {!forecast.irregular && (
+            {!forecast.irregular && !forecast.noFertile && (
               <View style={[styles.infoRow, { flexDirection: dir.row }]}>
                 <View style={[styles.infoLabelWrap, { flexDirection: dir.row }]}>
                   <MaterialCommunityIcons name="flower-tulip" size={20} color={colors.lilac} />
@@ -229,6 +238,15 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
                 : t('cycle.earlyEstimate')}
             </Text>
             {forecast.irregular && <Text style={[styles.note, text]}>{t('cycle.irregular')}</Text>}
+            {forecast.noFertile && (
+              <Text style={[styles.note, text]}>{t('personal.hormonalNote')}</Text>
+            )}
+            {forecast.daysLate > 0 && lateList !== '' && (
+              <Text style={[styles.note, text]}>{t('personal.lateReasons', { list: lateList })}</Text>
+            )}
+            {isPmsWindow(forecast) && pmsList !== '' && (
+              <Text style={[styles.note, text]}>{t('personal.pmsHeadsUp', { list: pmsList })}</Text>
+            )}
           </View>
         )}
         <HealthAlerts />

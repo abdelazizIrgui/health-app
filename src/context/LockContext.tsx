@@ -145,11 +145,12 @@ export function LockProvider({ children }: { children: React.ReactNode }) {
   }, [user, userLoading, enabled, reset]);
 
   // Lock again when she comes back after more than a few seconds away.
+  // Lock again when she comes back after more than a few seconds away.
   useEffect(() => {
     if (!enabled) return;
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'background') {
-        backgroundAt.current = Date.now();
+      if (state === 'background' || state === 'inactive') {
+        if (backgroundAt.current === null) backgroundAt.current = Date.now();
       } else if (state === 'active') {
         const away = backgroundAt.current;
         backgroundAt.current = null;
